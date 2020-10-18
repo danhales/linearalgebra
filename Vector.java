@@ -73,6 +73,41 @@ public class Vector {
    }
    
    /**
+    * cross computes the cross product (this x u)
+    * @param u the vector to cross the calling vector with
+    * @return the cross product this x u
+    */
+   public Vector cross(Vector u) {
+      return Vector.crossProduct(this, u);
+   }
+   
+   /**
+    * crossProduct method takes two vectors of length 3 and returns
+    * their cross product. Note that this operation is anticommutative,
+    * so crossProduct(a, b) = -crossProduct(b, a)
+    * @param a the left vector Vector
+    * @param b the right vector Vector
+    * @return the cross product a X b
+    */
+   public static Vector crossProduct(Vector a, Vector b) {
+      // check to make sure both vectors are the right length
+      if (a.length() != 3) {
+         throw new IllegalArgumentException("Invalid vector length (first vector)");
+      }
+      if (a.length() != 3) {
+         throw new IllegalArgumentException("Invalid vector length (second vector)");
+      }
+      checkLengths(a, b); // just in case      
+      
+      double[] entries = new double[] {
+         a.v[1] * b.v[2] - a.v[2] * b.v[1],
+         a.v[2] * b.v[0] - a.v[0] * b.v[2],
+         a.v[0] * b.v[1] - a.v[1] * b.v[0]};
+         
+      return new Vector(entries);
+   }
+   
+   /**
     * dot method computes the dot product of the calling vector and
     * the passed vectored.
     * assumes vectors have the same length.
@@ -229,6 +264,17 @@ public class Vector {
       }
       
       return new Vector(products);
+   }
+   
+   /**
+    * scalarTripleProduct computes a.dot(b.cross(c))
+    * @param a a Vector object
+    * @param b a Vector object
+    * @param c a Vector object
+    * @return the scalar triple product a.dot(b.cross(c))
+    */
+   public static double scalarTripleProduct(Vector a, Vector b, Vector c) {
+      return Vector.dotProduct(a, Vector.crossProduct(b, c));
    }
    
    /**
