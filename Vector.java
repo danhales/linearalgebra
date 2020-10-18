@@ -138,6 +138,16 @@ public class Vector {
    }
    
    /**
+    * identityVector returns an identity vector (whose entries are
+    * all zeros).
+    * @param length the length of the vector
+    * @return a vector with all zeros
+    */
+   public static Vector identityVector(int length) {
+      return new Vector(new double[length]);
+   }
+   
+   /**
     * isZero checks to see if all entries are zero.
     * @return true if all entries in v are zero, false otherwise
     */
