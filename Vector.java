@@ -46,6 +46,7 @@ public class Vector {
     */
     
    public static double angleDegrees(Vector u1, Vector u2) {
+      Vector.checkLengths(u1, u2);
       return Vector.angleRadians(u1, u2) * 180 / Math.PI;
    }
    
@@ -57,7 +58,18 @@ public class Vector {
     * @return the angle between u1 and u2 (in radians)
     */
    public static double angleRadians(Vector u1, Vector u2) {
+      Vector.checkLengths(u1, u2);
       return Math.acos(Vector.dotProduct(u1, u2) / (u1.magnitude() * u2.magnitude()));
+   }
+   
+   /**
+    * checkLengths method accepts two vectors and throws and 
+    * IllegalArgumentException if they are not the same lengths.
+    */
+   public static void checkLengths(Vector u1, Vector u2) {
+      if (u1.length() != u2.length()) {
+         throw new IllegalArgumentException("Vectors are different lengths");
+      }
    }
    
    /**
@@ -79,6 +91,8 @@ public class Vector {
     * @return the sum of the products of corresponding elements
     */
    public static double dotProduct(Vector u1, Vector u2) {
+      checkLengths(u1, u2);
+   
       double sum = 0;
       
       for (int i = 0; i < u1.length(); i++) {
@@ -207,7 +221,7 @@ public class Vector {
     * @param scalar a real number
     * @return the scalar product of the vector and the scalar
     */
-   public static Vector product(Vector u, double scalar) {
+   public static Vector product(Vector u, double scalar) {   
       double[] products = new double[u.length()];
       
       for (int i = 0; i < products.length; i++) {
@@ -225,6 +239,8 @@ public class Vector {
     * @param u2 a Vector object
     */
    public static Vector sum(Vector u1, Vector u2) {
+      checkLengths(u1, u2);
+      
       double[] sums = new double[u1.length()];
       
       for (int i = 0; i < sums.length; i++) {
