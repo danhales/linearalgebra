@@ -20,7 +20,7 @@ public class Vector {
     * Constructor makes a copy of the array passed.
     * @param v an array containing the entries in the vector
     */
-   public Vector(double[] v) {
+   public Vector(double ... v) {
       this.v = new double[v.length];
       for (int i = 0; i < v.length; i++) {
          this.v[i] = v[i];      
@@ -367,6 +367,15 @@ public class Vector {
       for (int i = 0; i < v.length; i++) {
          this.v[i] = v[i];
       }
+   }
+   
+   /**
+    * set method modifies the element at index to equal value.
+    * @param index the index we want to modify
+    * @param value the new value
+    */
+   public void set(int index, double value) {
+      this.v[index] = value;
    }
    
    /**
