@@ -148,6 +148,23 @@ public class Vector {
    }
    
    /**
+    * inverse returns the inverse of the calling vector.
+    * @return a Vector with the signs flipped on all entries
+    */
+   public Vector inverse() {
+      return this.multiply(-1);
+   }
+   
+   /**
+    * inverseVector returns the additive inverse of the vector passed.
+    * @param u a Vector
+    * @return a Vector whose entries have the signs flipped
+    */
+   public static Vector inverseVector(Vector u) {
+      return Vector.product(u, -1);
+   }
+   
+   /**
     * isZero checks to see if all entries are zero.
     * @return true if all entries in v are zero, false otherwise
     */
