@@ -97,7 +97,7 @@ public class Vector {
       if (a.length() != 3) {
          throw new IllegalArgumentException("Invalid vector length (second vector)");
       }
-      checkLengths(a, b); // just in case      
+      Vector.checkLengths(a, b); // just in case      
       
       double[] entries = new double[] {
          a.v[1] * b.v[2] - a.v[2] * b.v[1],
@@ -126,7 +126,7 @@ public class Vector {
     * @return the sum of the products of corresponding elements
     */
    public static double dotProduct(Vector u1, Vector u2) {
-      checkLengths(u1, u2);
+      Vector.checkLengths(u1, u2);
    
       double sum = 0;
       
@@ -183,7 +183,7 @@ public class Vector {
     * @return the magnitude of the vector
     */
    public double magnitude() {
-      return Vector.normL2(this);
+      return Vector.pnorm(this, 2);
    }
    
    /**
@@ -219,60 +219,37 @@ public class Vector {
     * @return a Vector object
     */
    public Vector normalize() {
-      if (this.isZero()) {
-         throw new IllegalArgumentException();
-      } else {
-         return this.multiply(1.0/this.magnitude());
-      }
+        return Vector.normalize(this);
    }   
-   
-   
-   /**
-    * normL1 accepts a Vector and returns the L1 norm (the sum
-    * of the absolute values of the vector's entries)
-    * @param u a Vector object
-    * @return the L1 norm of the vector
-    */
-   public static double normL1(Vector u) {
-      double sum = 0;
-      
-      for (int i = 0; i < u.length(); i++) {
-         sum += Math.abs(u.get(i));
-      }
-      
-      return sum;
-   }
-   
-   /**
-    * an instance method that calls normL1 on the current object.
-    * @return the L1 norm of the calling vector.
-    */
-   public double normL1() {
-      return Vector.normL1(this);
-   }
 
    /**
-    * normL2 accepts a Vector and returns the L1 norm (the sum
-    * of the squares of the vector's entries)
+    * pnorm accepts a Vector and a value for p and returns the Lp norm 
+    * (the p-th root of the sum of the p-th power of the absolute value of 
+    * the enttries
     * @param u a Vector object
+    * @param p a real number >= 1
     * @return the L2 norm of the vector
     */
-   public static double normL2(Vector u) {
+   public static double pnorm(Vector u, double p) {
+      if (p < 1) {
+         throw new IllegalArgumentException("p must be >= 1");
+      }
+   
       double sum = 0;
       
       for (int i = 0; i < u.length(); i++) {
-         sum += Math.pow(u.get(i), 2);
+         sum += Math.pow(Math.abs(u.get(i)), p);
       }
       
-      return Math.sqrt(sum);
+      return Math.pow(sum, 1/p);
    }
    
    /**
     * an instance method that calls normL1 on the current object.
     * @return the L2 norm of the calling vector.
     */
-   public double normL2() {
-      return Vector.normL2(this);
+   public double pnorm(double p) {
+      return Vector.pnorm(this, p);
    }
 
    /**
@@ -312,7 +289,7 @@ public class Vector {
     * @param u2 a Vector object
     */
    public static Vector sum(Vector u1, Vector u2) {
-      checkLengths(u1, u2);
+      Vector.checkLengths(u1, u2);
       
       double[] sums = new double[u1.length()];
       
@@ -385,7 +362,7 @@ public class Vector {
    @Override
    public String toString() {
       String str = "[";
-      String sep = "  ";
+      String sep = ",\n ";
       
       for (int i = 0; i < this.v.length; i++) {
          str += this.v[i];
