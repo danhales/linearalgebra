@@ -44,7 +44,6 @@ public class Vector {
     * @param u2 a Vector object
     * @return the angle between u1 and u2 (in radians)
     */
-    
    public static double angleDegrees(Vector u1, Vector u2) {
       Vector.checkLengths(u1, u2);
       return Vector.angleRadians(u1, u2) * 180 / Math.PI;
@@ -362,7 +361,7 @@ public class Vector {
    @Override
    public String toString() {
       String str = "[";
-      String sep = ",\n ";
+      String sep = ", ";
       
       for (int i = 0; i < this.v.length; i++) {
          str += this.v[i];
