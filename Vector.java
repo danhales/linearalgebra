@@ -355,7 +355,8 @@ public class Vector {
    }
    
    /**
-    * Return a String containing the vector represented as a row in brackets.
+    * Return a String containing the vector represented as a row in brackets, e.g.
+    * [1.0, 2.2, 3.1, 4.9, 5.7]
     * @return a String representation of the vector
     */
    @Override
