@@ -169,6 +169,27 @@ public class Matrix {
       
       return new Vector(columnVector);  
    }
+   
+   /**   
+    * getIdentityMatrix returns an n by n matrix with all zeroes
+    * and ones on the diagonal.
+    * @param n an integer greater than or equal to 1
+    * @return an n-by-n matrix with ones on the diagonal and zeroes
+    *         everywhere else
+    */
+   public static Matrix identityMatrix(int n) {
+      if (n < 1) {
+         throw new IllegalArgumentException("n must be >= 1");
+      }
+      
+      double[][] entries = new double[n][n];
+      
+      for (int i = 0; i < n; i++) {
+         entries[i][i] = 1.0;
+      }
+      
+      return new Matrix(entries);
+   }  
 
    /**
     * multiplies each entry in the Matrix m by a real number.
