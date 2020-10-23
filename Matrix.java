@@ -25,7 +25,21 @@ public class Matrix {
             this.matrix[row][col] = matrix[row][col];
          }
       }
-   } 
+   }
+   
+   /**
+    * copy constructor accepts a Matrix object and duplicates it.
+    * @param m the Matrix object we want to copy
+    */
+   public Matrix(Matrix m) {
+      this.matrix = new double[m.getNumRows()][m.getNumColumns()];
+      
+      for (int row = 0; row < m.matrix.length; row++) {
+         for (int col = 0; col < m.matrix[row].length; col++) {
+            this.matrix[row][col] = m.matrix[row][col];
+         }
+      }
+   }
 
    /**
     * adds corresponding entries in the two matrices. Calling Matrix and Matrix b
@@ -93,46 +107,18 @@ public class Matrix {
    }
    
    /**
-    * @return the number of rows in the matrix
-    */
-   public int getNumRows() {
-      return this.matrix.length;
-   }
-   
-   /**
     * @return the number of columns in the matrix
     */
    public int getNumColumns() {
       return this.matrix[0].length;
    }
-   
+
    /**
-    * accepts a row number (starting at 0) and returns the entries in
-    * the row as a Vector object
-    * @param row the number of the desired row (starting at 0, up to this.matrix.length-1)
-    * @return a Vector containing the entries in the desired row
+    * @return the number of rows in the matrix
     */
-   public Vector getRow(int row) {
-      return Matrix.getRow(this, row);
+   public int getNumRows() {
+      return this.matrix.length;
    }
-   
-   /**
-    * accepts a row number (starting at 0) and returns the entries in
-    * the row as a Vector object
-    * @param m the Matrix object we want the row from
-    * @param row the number of the desired row (starting at 0, up to this.matrix.length-1)
-    * @return a Vector containing the entries in the desired row
-    */
-   public static Vector getRow(Matrix m, int row) {
-      if (m == null) {
-         throw new IllegalArgumentException("Matrix is null.");
-      }
-      if (row >= m.matrix.length || row < 0) {
-         throw new IllegalArgumentException("Row does not exist in matrix.");
-      }
-      
-      return new Vector(m.matrix[row]);
-   } 
 
    /**
     * accepts a column number (starting at 0) and returns the entries in
@@ -168,6 +154,34 @@ public class Matrix {
       }  
       
       return new Vector(columnVector);  
+   }
+ 
+   /**
+    * accepts a row number (starting at 0) and returns the entries in
+    * the row as a Vector object
+    * @param row the number of the desired row (starting at 0, up to this.matrix.length-1)
+    * @return a Vector containing the entries in the desired row
+    */
+   public Vector getRow(int row) {
+      return Matrix.getRow(this, row);
+   }
+   
+   /**
+    * accepts a row number (starting at 0) and returns the entries in
+    * the row as a Vector object
+    * @param m the Matrix object we want the row from
+    * @param row the number of the desired row (starting at 0, up to this.matrix.length-1)
+    * @return a Vector containing the entries in the desired row
+    */
+   public static Vector getRow(Matrix m, int row) {
+      if (m == null) {
+         throw new IllegalArgumentException("Matrix is null.");
+      }
+      if (row >= m.matrix.length || row < 0) {
+         throw new IllegalArgumentException("Row does not exist in matrix.");
+      }
+      
+      return new Vector(m.matrix[row]);
    }
    
    /**   
@@ -318,6 +332,160 @@ public class Matrix {
       
       return new Matrix(entries);  
    }
+
+   /**
+    * accepts a Vector object and a column index and overwrites the entries 
+    * in the specified row with the entries in the Vector object
+    * if the column length and the Vector length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param m a Matrix object
+    * @param col an index for the column
+    * @param v a Vector object
+    * @return a Matrix object with the col-th row replaced with v
+    */   
+   public Matrix setColumn(int col, Vector v) {
+      return Matrix.setColumn(this, col, v);
+   }
+
+   /**
+    * accepts an array of doubles, and a column index and overwrites the entries 
+    * in the specified column with the entries in the given array.
+    * if the clumn length and the array length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param col an index for the column
+    * @param v a an array of doubles
+    * @return a Matrix object with the col-th column replaced with v
+    */     
+   public Matrix setColumn(int col, double[] v) {
+      return Matrix.setColumn(this, col, v);
+   }
+
+   /**
+    * accepts a Matrix object, a Vector object and a column index and 
+    * overwrites the entries in the specified column with the entries in 
+    * the given Vector.
+    * if the column length and the Vector length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param m a Matrix object
+    * @param col an index for the col
+    * @param v a Vector object containing the entries we want
+    * @return a Matrix object with the col-th column replaced with v
+    */
+   public static Matrix setColumn(Matrix m, int col, Vector v) {
+      if (m.matrix.length != v.length()) {
+         throw new IllegalArgumentException("Vector length and does not match column length.");
+      }
+      
+      if (col < 0 || col >= m.getNumColumns()) {
+         throw new IllegalArgumentException("Invalid column: " + col);
+      }
+      
+      Matrix n = new Matrix(m);
+      
+      for (int i = 0; i < n.matrix.length; i++) {
+         n.matrix[i][col] = v.get(i);
+      }
+      
+      return n;
+   }
+   
+   /**
+    * accepts an array of doubles, a Vector object, and a column index and 
+    * overwrites the entries in the specified column with the entries in 
+    * the given array
+    * if the column length and the array length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param m a Matrix object
+    * @param col an index for the col
+    * @param v an array of doubles containing the entries we want
+    * @return a Matrix object with the col-th column replaced with v
+    */
+   public static Matrix setColumn(Matrix m, int col, double[] v) {
+      if (m.matrix.length != v.length) {
+         throw new IllegalArgumentException("Array length and does not match row length.");
+      }
+      
+      return Matrix.setColumn(m, col, new Vector(v));
+   }
+
+   /**
+    * accepts an Vector object and a row index and overwrites the entries 
+    * in the specified row with the entries in the Vector object
+    * if the row length and the Vector length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param m a Matrix object
+    * @param row an index for the row
+    * @param v a Vector object
+    * @return a Matrix object with the row-th row replaced with v
+    */   
+   public Matrix setRow(int row, Vector v) {
+      return Matrix.setRow(this, row, v);
+   }
+
+   /**
+    * accepts an array of doubles, and a row index and overwrites the entries 
+    * in the specified row with the entries in the given array.
+    * if the row length and the array length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param row an index for the row
+    * @param v a an array of doubles
+    * @return a Matrix object with the row-th row replaced with v
+    */     
+   public Matrix setRow(int row, double[] v) {
+      return Matrix.setRow(this, row, v);
+   }
+   
+   /**
+    * accepts a Matrix object, a Vector object and a row index and 
+    * overwrites the entries in the specified row with the entries in 
+    * the given Vector.
+    * if the row length and the Vector length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param m a Matrix object
+    * @param row an index for the row
+    * @param v a Vector object containing the entries we want
+    * @return a Matrix object with the row-th row replaced with v
+    */
+   public static Matrix setRow(Matrix m, int row, Vector v) {
+      if (m.matrix[row].length != v.length()) {
+         throw new IllegalArgumentException("Vector length and does not match row length.");
+      }
+      
+      if (row < 0 || row >= m.getNumRows()) {
+         throw new IllegalArgumentException("Invalid row: " + row);
+      }
+      
+      Matrix n = new Matrix(m);
+      
+      for (int i = 0; i < n.matrix[row].length; i++) {
+         n.matrix[row][i] = v.get(i);
+      }
+      
+      return n;
+   }
+
+   /**
+    * accepts a Matrix object, an array of doubles, and a row index and 
+    * overwrites the entries in the specified row with the entries in 
+    * the given array.
+    * if the row length and the Vector length do not match, an
+    * IllegalArgumentException will be thrown.
+    * @param m a Matrix object
+    * @param row an index for the row
+    * @param v a an array of doubles
+    * @return a Matrix object with the row-th row replaced with v
+    */
+   public static Matrix setRow(Matrix m, int row, double[] v) {
+      if (row < 0 || row >= m.getNumRows()) {
+         throw new IllegalArgumentException("Invalid row: " + row);
+      }
+      
+      if (m.matrix[row].length != v.length) {
+         throw new IllegalArgumentException("Array length and does not match row length.");
+      }
+      
+      return Matrix.setRow(m, row, new Vector(v));
+   }
    
    /**
     * returns an array of two ints containing the dimensions of the Matrix
@@ -326,6 +494,87 @@ public class Matrix {
     */
    public static int[] shape(Matrix m) {
       return new int[] {m.getNumRows(), m.getNumColumns()};
+   }
+
+   /**
+    * swaps the entries in col1 with the entries in col2.
+    * uses two intermediary Vector objects to hold the entries
+    * @param col1 the index of the first column to be swapped
+    * @param col2 the index of the second column to be swapped
+    * @return a Matrix with col1 and col2 swapped
+    */
+   public Matrix swapColumns(int col1, int col2) {
+      return Matrix.swapColumns(this, col1, col2);
+   }
+
+   /**
+    * swaps the entries in col1 with the entries in col2.
+    * uses two intermediary Vector objects to hold the entries
+    * @param m a Matrix object
+    * @param col1 the index of the first column to be swapped
+    * @param col2 the index of the second column to be swapped
+    * @return a Matrix with col1 and col2 swapped
+    */
+   public static Matrix swapColumns(Matrix m, int col1, int col2) {
+      if (col1 < 0 || col1 >= m.getNumColumns()) {
+         throw new IllegalArgumentException("Invalid column: " + col1);
+      }
+      
+      if (col2 < 0 || col2 >= m.getNumColumns()) {
+         throw new IllegalArgumentException("Invalid column: " + col2);
+      }
+      
+      return new Matrix(m).setColumn(col1, m.getColumn(col2))
+                          .setColumn(col2, m.getColumn(col1));
+   }
+   
+   /**
+    * swaps the entries in row1 with the entries in row2.
+    * uses two intermediary Vector objects to hold the entries
+    * @param row1 the index of the first row to be swapped
+    * @param row2 the index of the second row to be swapped
+    * @return a Matrix with row1 and row2 swapped
+    */
+   public Matrix swapRows(int row1, int row2) {
+      return Matrix.swapRows(this, row1, row2);
+   }
+   
+   /**
+    * swaps the entries in row1 with the entries in row2.
+    * uses two intermediary Vector objects to hold the entries
+    * @param m a Matrix object
+    * @param row1 the index of the first row to be swapped
+    * @param row2 the index of the second row to be swapped
+    * @return a Matrix with row1 and row2 swapped
+    */
+   public static Matrix swapRows(Matrix m, int row1, int row2) {
+      if (row1 < 0 || row1 >= m.getNumRows()) {
+         throw new IllegalArgumentException("Invalid row: " + row1);
+      }
+      
+      if (row2 < 0 || row2 >= m.getNumRows()) {
+         throw new IllegalArgumentException("Invalid row: " + row2);
+      }
+      
+      return new Matrix(m).setRow(row1, m.getRow(row2))
+                          .setRow(row2, m.getRow(row1));
+   }
+   
+   /**
+    * transposes the matrix. swaps the rows and columns.
+    * @param m a Matrix object
+    * @return the transpose of the Matrix object
+    */
+   public static Matrix transpose(Matrix m) {
+      double[][] n = new double[m.getNumColumns()][m.getNumRows()];
+      
+      for (int row = 0; row < n.length; row++) {
+         for (int col = 0; col < n[row].length; col++) {
+            n[row][col] = m.matrix[col][row];
+         }
+      }
+      
+      return new Matrix(n);
    }
    
    /**
