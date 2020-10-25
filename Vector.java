@@ -28,6 +28,18 @@ public class Vector {
    }
    
    /**
+    * copy constructor copies the entires in vect into v
+    * @param vect a Vector object
+    */
+   public Vector(Vector vect) {
+      this.v = new double[vect.v.length];
+      
+      for (int i = 0; i < vect.v.length; i++) {
+         this.v[i] = vect.v[i];
+      }
+   }
+   
+   /**
     * add method accepts a vector and adds it to the current vector
     * @param u the vector to add onto the calling vector.
     * @return a Vector object whose entries are the element-wise sums
@@ -107,6 +119,18 @@ public class Vector {
    }
    
    /**
+    * difference method returns the difference of two vectors. note
+    * that difference is a special case of sum (v1 + (-1)*v2)
+    * @param v1 a Vector object
+    * @param v2 a Vector object
+    * @return a new Vector object whose entries are the differences of
+    *         the entries in v1 and v2 (v1 - v2)
+    */
+   public static Vector difference(Vector v1, Vector v2) {
+      return Vector.sum(v1, v2.multiply(-1));
+   }
+   
+   /**
     * dot method computes the dot product of the calling vector and
     * the passed vectored.
     * assumes vectors have the same length.
@@ -169,12 +193,35 @@ public class Vector {
     */
    public boolean isZero() {
       for (double entry : v) {
-         if (entry != 0) { // if a non-zero entry is found
+         if (Math.abs(entry) > 0.0000000001) { // if a non-zero entry is found
             return false;
          }
       }
       
       return true;
+   }
+   
+   /**
+    * Creates a linear combination (weighted sum) of the Vector objects
+    * and the weights. Throws IllegalArgumentException if the length of
+    * the weights array does not match the length of the vectors array
+    * @param vectors an array of Vector objects
+    * @param weights an array of doubles to weight the sum
+    */
+   public static Vector linearCombination(Vector[] vectors, double[] weights) {
+      if (vectors.length != weights.length) {
+         throw new IllegalArgumentException("Number of vectors does not match number of weights.");
+      }
+      
+      // start the sum by weighting the first vector
+      Vector sum = new Vector(vectors[0].multiply(weights[0]));
+      
+      // weight and add each Vector onto sum
+      for (int i = 1; i < vectors.length; i++) {
+         sum = sum.add(vectors[i].multiply(weights[i]));
+      }
+      
+      return sum;
    }
    
    /**
@@ -278,6 +325,17 @@ public class Vector {
     */
    public static double scalarTripleProduct(Vector a, Vector b, Vector c) {
       return Vector.dotProduct(a, Vector.crossProduct(b, c));
+   }
+   
+   /**
+    * subtract method subtracts the passed Vector from the calling Vector.
+    * @param v a Vector object
+    * @return a Vector object whose entries are the difference of the
+    *         entries in the calling Vector and the respective entries 
+    *         in v
+    */
+   public Vector subtract(Vector v) {
+      return Vector.difference(this, v);
    }
    
    /**
