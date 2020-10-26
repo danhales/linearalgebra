@@ -203,7 +203,189 @@ public class Matrix {
       }
       
       return new Matrix(entries);
-   }  
+   }
+   
+   /**
+    * isDiagonal checks to see if all values except for the diagonal
+    * are zero.
+    * @return true if only the diagonal contains non-zero values, 
+    *         false otherwise
+    */
+   public boolean isDiagonal() {
+      return Matrix.isDiagonal(this);
+   }
+   
+   /**
+    * isDiagonal checks to see if all values except for the diagonal
+    * are zero.
+    * @param m a square Matrix object
+    * @return true if only the diagonal contains non-zero values, 
+    *         false otherwise
+    */
+   public static boolean isDiagonal(Matrix m) {
+      if (!Matrix.isSquare(m)) {
+         throw new IllegalArgumentException("Matrix is not square.");
+      }  
+   
+      for (int row = 0; row < m.matrix.length; row++) {
+         for (int col = 0; col < m.matrix[row].length; col++) {
+            if (row != col) { // if we're not on the diagonal
+            
+               // if the value is non-zero
+               if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+                  return false;
+               }
+            }
+         }
+      }
+      
+      return true;  
+   }
+   
+   /**
+    * isLowerTriangular checks to see if all values below the diagonal
+    * are zero.
+    * @return true if all entries below the diagonal are zero, false otherwise
+    */
+   public boolean isLowerTriangular() {
+      return Matrix.isLowerTriangular(this);
+   }   
+   
+   /**
+    * isLowerTriangular checks to see if all values below the diagonal
+    * are zero.
+    * @param m a Matrix object
+    * @return true if all entries below the diagonal are zero, false otherwise
+    */
+   public static boolean isLowerTriangular(Matrix m) {
+      
+      for (int row = 1; row < m.matrix.length; row++) {
+         for (int col = 0; col < row; col++) { // only below the diagonal
+            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+               return false;
+            }
+         }
+      }
+      
+      return true;
+   }
+   
+   /**
+    * isSparse checks to see if most of the matrix entries are zero.
+    * "most" is defined as no more than max(num columns, num rows)
+    * @return true if the matrix contains very few nonzero entries,
+    *         false otherwise
+    */
+   public boolean isSparse() {
+      return Matrix.isSparse(this);
+   }
+   
+   /**
+    * isSparse checks to see if most of the matrix entries are zero.
+    * "most" is defined as no more than max(num columns, num rows)
+    * @param m a Matrix object
+    * @return true if the matrix contains very few nonzero entries,
+    *         false otherwise
+    */
+   public static boolean isSparse(Matrix m) {
+      int numNonzero = 0;
+      
+      for (int row = 0; row < m.matrix.length; row++) {
+         for (int col = 0; col < m.matrix[row].length; col++) {
+            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+               numNonzero++;
+            }
+         }
+      }
+      
+      return (numNonzero <= Math.max(m.getNumRows(), m.getNumColumns()));
+   }
+   
+   /**
+    * isSparse checks to see if most of the matrix entries are zero.
+    * "most" is defined as no more the specified proportion
+    * @param p the desired proportion (0 < p <= 1)
+    * @return true if the matrix contains very few nonzero entries,
+    *         false otherwise
+    */
+   public boolean isSparse(double p) {
+      return Matrix.isSparse(this, p);
+   }
+   
+   /**
+    * isSparse checks to see if most of the matrix entries are zero.
+    * "most" is defined as no more the specified proportion
+    * @param m a Matrix object
+    * @param p the desired proportion (0 < p <= 1)
+    * @return true if the matrix contains very few nonzero entries,
+    *         false otherwise
+    */
+   public static boolean isSparse(Matrix m, double p) {
+      if (p <= Double.MIN_VALUE || p > 1) {
+         throw new IllegalArgumentException("p is not in the correct range (0,1]");
+      }
+   
+      int numNonzero = 0;
+      
+      for (int row = 0; row < m.matrix.length; row++) {
+         for (int col = 0; col < m.matrix[row].length; col++) {
+            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+               numNonzero++;
+            }
+         }
+      }
+      
+      return ((double)numNonzero / (m.getNumRows() * m.getNumColumns())) <= p;
+   }
+   
+   /**
+    * isSquare checks the dimensions of the Matrix to see if they are
+    * equal. if so, the Matrix is square, and the method returns true.
+    * @return true if the number of rows equals the number of columns,
+    *         false otherwise
+    */
+   public boolean isSquare() {
+      return Matrix.isSquare(this);
+   }
+   
+   /**
+    * isSquare checks the dimensions of the Matrix to see if they are
+    * equal. if so, the Matrix is square, and the method returns true.
+    * @param m a Matrix object
+    * @return true if the number of rows equals the number of columns,
+    *         false otherwise
+    */  
+   public static boolean isSquare(Matrix m) {
+      return (m.getNumRows() == m.getNumColumns());
+   }
+
+   /**
+    * isUpperTriangular checks to see if all values above the diagonal
+    * are zero.
+    * @return true if all entries above the diagonal are zero, false otherwise
+    */   
+   public boolean isUpperTriangular() {
+      return Matrix.isUpperTriangular(this);
+   }
+   
+   /**
+    * isUpperTriangular checks to see if all values above the diagonal
+    * are zero.
+    * @param m a Matrix object
+    * @return true if all entries above the diagonal are zero, false otherwise
+    */
+   public static boolean isUpperTriangular(Matrix m) {
+      
+      for (int row = 0; row < m.matrix.length; row++) {
+         for (int col = row+1; col < m.matrix[row].length; col++) { // only below the diagonal
+            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+               return false;
+            }
+         }
+      }
+      
+      return true;
+   }
 
    /**
     * multiplies each entry in the Matrix m by a real number.
@@ -407,6 +589,29 @@ public class Matrix {
       
       return Matrix.setColumn(m, col, new Vector(v));
    }
+   
+   /**
+    * Changes the entry in the row-th row and the col-th column to value.
+    * @param m a Matrix object
+    * @param value a double––the value we want to set
+    * @param row the index of the row
+    * @param col the index of the column
+    * @return the Matrix m, modified so the entry at [row][col] is value
+    */
+   public static Matrix setEntry(Matrix m, double value, int row, int col) {
+      if (row < 0 || row >= m.getNumRows()) {
+         throw new IllegalArgumentException("row is out of range");
+      }
+      
+      if (col < 0 || col >= m.getNumColumns()) {
+         throw new IllegalArgumentException("col is out of range");
+      }
+   
+      Matrix n = new Matrix(m);
+      n.matrix[row][col] = value;
+      return n;
+   }
+    
 
    /**
     * accepts an Vector object and a row index and overwrites the entries 
