@@ -78,6 +78,123 @@ public class Matrix {
    }
    
    /**
+    * dropColumn accepts a non-negative int corresponding to a column index, and 
+    * returns the matrix, with that column dropped.
+    * It does this by passing all columns except the column to be dropped
+    * to fromColumnVectors.
+    * @param col a column index (0 < col < matrix[0].length)
+    */  
+   public Matrix dropColumn(int col) {
+      return Matrix.dropColumn(this, col);
+   }
+   
+   /**
+    * dropColumn accepts a Matrix object and a non-negative int corresponding
+    * to a column index, and returns the matrix, with that column dropped.
+    * It does this by passing all columns except the column to be dropped
+    * to fromColumnVectors.
+    * @param m a Matrix object
+    * @param col a column index (0 < col < matrix[0].length)
+    */
+   public static Matrix dropColumn(Matrix m, int col) {
+      if (col < 0 || col >= m.getNumColumns()) {
+         System.out.println("col = " + col);
+         System.out.println("num columns = " + m.getNumColumns());
+         throw new IllegalArgumentException("col is out of range");
+      }
+      
+      Vector[] columns = new Vector[m.getNumRows() - 1];
+      
+      for (int i = 0; i < m.matrix[0].length; i++) {
+         // if we're to the left of the column to be dropped, columns[i] = m.getColumn(i)
+         if (i < col) {
+            columns[i] = m.getColumn(i);
+         }
+         
+         // if we're to the right of the column to be dropped, columns[i-1] = m.getColumn(i)
+         if (i > col) {
+            columns[i-1] = m.getColumn(i);
+         }
+      }
+      
+      return Matrix.fromColumnVectors(columns);
+   }
+   
+   /**
+    * dropRow accepts a non-negative int corresponding to a row index, and 
+    * returns the matrix, with that row dropped.
+    * It does this by passing all rows except the row to be dropped
+    * to fromRowVectors.
+    * @param row a row index (0 < row < matrix.length)
+    */  
+   public Matrix dropRow(int row) {
+      return Matrix.dropRow(this, row);
+   }
+   
+   /**
+    * dropRow accepts a Matrix object and a non-negative int corresponding
+    * to a row index, and returns the matrix, with that row dropped. It does 
+    * this by passing all row except the row to be dropped to fromRowVectors.
+    * @param m a Matrix object
+    * @param row a row index (0 < col < matrix.length)
+    */
+   public static Matrix dropRow(Matrix m, int row) {
+      if (row < 0 || row >= m.getNumRows()) {
+         throw new IllegalArgumentException("row is out of range");
+      }
+      
+      Vector[] v = new Vector[m.getNumRows()-1];
+      
+      for (int i = 0; i < m.getNumRows(); i++) {
+         if (i < row) {
+            v[i] = m.getRow(i);
+         }
+         
+         if (i > row) {
+            v[i-1] = m.getRow(i);
+         }
+      }
+      
+      return Matrix.fromRowVectors(v);
+   }
+    
+   /**
+    * Constructs a Matrix object from column vectors.
+    * Vectors must all have the same length (the length of the first Vector in
+    * the array), or an IllegalArgumentException will be thrown.
+    * @param vectors an array of Vector objects
+    * @return a Matrix whose rows are the passed vectors
+    */ 
+   public static Matrix fromColumnVectors(Vector ... vectors) {
+      return Matrix.transpose(Matrix.fromRowVectors(vectors));  
+   }
+   
+   /**
+    * Constructs a Matrix object from row vectors.
+    * Vectors must all have the same length (the length of the first Vector in
+    * the array), or an IllegalArgumentException will be thrown.
+    * @param vectors an array of Vector objects
+    * @return a Matrix whose rows are the passed vectors
+    */ 
+   public static Matrix fromRowVectors(Vector ... vectors) {
+      for (Vector v : vectors) {
+         if (v.length() != vectors[0].length()) {
+            throw new IllegalArgumentException("Vectors do not have the same length.");
+         }
+      }      
+      
+      double[][] entries = new double[vectors.length][vectors[0].length()];
+      
+      for (int row = 0; row < vectors.length; row++) {
+         for (int col = 0; col < vectors[row].length(); col++) {
+            entries[row][col] = vectors[row].get(col);
+         }
+      }
+      
+      return new Matrix(entries);  
+   }
+   
+   /**
     * returns the entry in the row-th row and col-th column of m.
     * @param row the row of the desired entry
     * @param col the column of the desired entry
