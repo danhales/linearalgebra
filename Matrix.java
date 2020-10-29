@@ -76,6 +76,64 @@ public class Matrix {
       
       return new Matrix(entries);
    }
+
+   /**
+    * adds the passed Vector to the specified column of the calling Matrix.
+    * throws an IllegalArgumentException if the dimensions don't line up.
+    * @param v a Vector object
+    * @param col the column in m to which we want to add v
+    */
+   public Matrix addVectorToColumn(Vector v, int col) {
+      return Matrix.addVectorToColumn(this, v, col);
+   }  
+   
+   /**
+    * adds the passed Vector to the specified column of the passed Matrix.
+    * throws an IllegalArgumentException if the dimensions don't line up.
+    * @param m a Matrix object
+    * @param v a Vector object
+    * @param col the column in m to which we want to add v
+    */
+   public static Matrix addVectorToColumn(Matrix m, Vector v, int col) {
+      if (col < 0 || col >= m.getNumColumns()) {
+         throw new IllegalArgumentException("col is not in the correct range");
+      }
+   
+      if (v.length() != m.getColumn(col).length()) {
+         throw new IllegalArgumentException("Vector length does not match row length");
+      }
+      
+      return m.setColumn(col, m.getColumn(col).add(v));
+   }
+   
+   /**
+    * adds the passed Vector to the specified row of the calling Matrix.
+    * throws an IllegalArgumentException if the dimensions don't line up.
+    * @param v a Vector object
+    * @param row the row in m to which we want to add v
+    */
+   public Matrix addVectorToRow(Vector v, int row) {
+      return Matrix.addVectorToRow(this, v, row);
+   }   
+   
+   /**
+    * adds the passed Vector to the specified row of the passed Matrix.
+    * throws an IllegalArgumentException if the dimensions don't line up.
+    * @param m a Matrix object
+    * @param v a Vector object
+    * @param row the row in m to which we want to add v
+    */
+   public static Matrix addVectorToRow(Matrix m, Vector v, int row) {
+      if (row < 0 || row >= m.getNumRows()) {
+         throw new IllegalArgumentException("row is not in the correct range");
+      }
+   
+      if (v.length() != m.getRow(row).length()) {
+         throw new IllegalArgumentException("Vector length does not match row length");
+      }
+      
+      return m.setRow(row, m.getRow(row).add(v));
+   }
    
    /**
     * determinant computes the determinant of a square Matrix object.
@@ -930,6 +988,14 @@ public class Matrix {
       return new Matrix(m).setRow(row1, m.getRow(row2))
                           .setRow(row2, m.getRow(row1));
    }
+   
+   /**
+    * transposes the matrix. swaps the rows and columns.
+    * @return the transpose of the Matrix object
+    */
+   public Matrix transpose() {
+      return Matrix.transpose(this);
+   }   
    
    /**
     * transposes the matrix. swaps the rows and columns.
