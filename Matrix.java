@@ -78,6 +78,39 @@ public class Matrix {
    }
    
    /**
+    * determinant computes the determinant of a square Matrix object.
+    * The determinant is not defined for non-square matrices.
+    * Determinant is computed recursively via cofactor expansion across
+    * the first row:
+    * https://en.wikipedia.org/wiki/Determinant#Laplace's_expansion_and_the_adjugate_matrix
+    * For a 1x1 Matrix, the determinant is the only entry.
+    * @param m a Matrix object
+    * @return the determinant of the Matrix (a double) 
+    */
+   public static double determinant(Matrix m) {
+      if (!Matrix.isSquare(m)) {
+         throw new IllegalArgumentException("Determinant undefined for non-square matrices");
+      }
+      
+      double determinant = 0;
+      
+      if (Matrix.getNumRows(m) == 1) {
+         determinant = Matrix.getEntry(m, 0, 0);
+      } else if (Matrix.getNumRows(m) == 2) {
+         determinant =  (m.getEntry(0,0) * m.getEntry(1, 1)
+                        - m.getEntry(0,1) * m.getEntry(1,0));
+      } else {
+         for (int col = 0; col < m.getNumColumns(); col++) {
+            determinant += Math.pow(-1, col) *  
+                           m.getEntry(0, col) *
+                           Matrix.determinant(m.dropRow(0).dropColumn(col));
+         }
+      }
+
+      return determinant;
+   }
+   
+   /**
     * dropColumn accepts a non-negative int corresponding to a column index, and 
     * returns the matrix, with that column dropped.
     * It does this by passing all columns except the column to be dropped
@@ -103,7 +136,7 @@ public class Matrix {
          throw new IllegalArgumentException("col is out of range");
       }
       
-      Vector[] columns = new Vector[m.getNumRows() - 1];
+      Vector[] columns = new Vector[m.getNumColumns() - 1];
       
       for (int i = 0; i < m.matrix[0].length; i++) {
          // if we're to the left of the column to be dropped, columns[i] = m.getColumn(i)
@@ -227,15 +260,31 @@ public class Matrix {
     * @return the number of columns in the matrix
     */
    public int getNumColumns() {
-      return this.matrix[0].length;
+      return Matrix.getNumColumns(this);
    }
+
+   /**
+    * @param m a Matrix object
+    * @return the number of columns in the matrix
+    */   
+   public static int getNumColumns(Matrix m) {
+      return m.matrix[0].length;
+   }  
 
    /**
     * @return the number of rows in the matrix
     */
    public int getNumRows() {
-      return this.matrix.length;
+      return Matrix.getNumRows(this);
    }
+   
+   /**
+    * @param m a Matrix object
+    * @return the number of columns in the matrix
+    */
+   public static int getNumRows(Matrix m) {
+      return m.matrix.length;
+   } 
 
    /**
     * accepts a column number (starting at 0) and returns the entries in
