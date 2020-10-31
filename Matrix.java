@@ -989,6 +989,36 @@ public class Matrix {
                           .setRow(row2, m.getRow(row1));
    }
    
+   
+   /**
+    * returns the sum of the entries on the diagonal of a square matrix, which is
+    * also the sum of the matrix's eigenvalues
+    * @return the sum of the entries on the diagonal
+    */
+   public double trace() {
+      return Matrix.trace(this);
+   }
+   
+   /**
+    * returns the sum of the entries on the diagonal of a square matrix, which is
+    * also the sum of the matrix's eigenvalues
+    * @param m a square Matrix object
+    * @return the sum of the entries on the diagonal
+    */
+   public static double trace(Matrix m) {
+      if (!Matrix.isSquare(m)) {
+         throw new IllegalArgumentException("Trace is not defined for non-square matrix");
+      }
+      
+      double trace = 0;
+      
+      for (int i = 0; i < Matrix.getNumRows(m); i++) {
+         trace += m.getEntry(i, i);
+      }
+      
+      return trace;
+   }
+   
    /**
     * transposes the matrix. swaps the rows and columns.
     * @return the transpose of the Matrix object
