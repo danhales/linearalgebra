@@ -12,30 +12,30 @@ package linearalgebra;
  
 public class Vector {
    /**
-    * v contains the entries in the vector
+    * entries contains the entries in the vector
     */
-   private double[] v;
+   private double[] entries;
    
    /**
     * Constructor makes a copy of the array passed.
-    * @param v an array containing the entries in the vector
+    * @param entries an array containing the entries in the vector
     */
-   public Vector(double ... v) {
-      this.v = new double[v.length];
-      for (int i = 0; i < v.length; i++) {
-         this.v[i] = v[i];      
+   public Vector(double ... entries) {
+      this.entries = new double[entries.length];
+      for (int i = 0; i < entries.length; i++) {
+         this.entries[i] = entries[i];      
       }
    }
    
    /**
     * copy constructor copies the entires in vect into v
-    * @param vect a Vector object
+    * @param u a Vector object
     */
-   public Vector(Vector vect) {
-      this.v = new double[vect.v.length];
+   public Vector(Vector u) {
+      this.entries = new double[u.entries.length];
       
-      for (int i = 0; i < vect.v.length; i++) {
-         this.v[i] = vect.v[i];
+      for (int i = 0; i < u.entries.length; i++) {
+         this.entries[i] = u.entries[i];
       }
    }
    
@@ -46,7 +46,7 @@ public class Vector {
     *    of the calling vector and the argument
     */
    public Vector add(Vector u) {
-      return Vector.sum(this, u);
+      return Vector.add(this, u);
    }
    
    /**
@@ -70,7 +70,7 @@ public class Vector {
     */
    public static double angleRadians(Vector u1, Vector u2) {
       Vector.checkLengths(u1, u2);
-      return Math.acos(Vector.dotProduct(u1, u2) / (u1.magnitude() * u2.magnitude()));
+      return Math.acos(Vector.dot(u1, u2) / (u1.magnitude() * u2.magnitude()));
    }
    
    /**
@@ -91,18 +91,18 @@ public class Vector {
     * @return the cross product this x u
     */
    public Vector cross(Vector u) {
-      return Vector.crossProduct(this, u);
+      return Vector.cross(this, u);
    }
    
    /**
-    * crossProduct method takes two vectors of length 3 and returns
-    * their cross product. Note that this operation is anticommutative,
-    * so crossProduct(a, b) = -crossProduct(b, a)
+    * cross method takes two vectors of length 3 and returns their
+    * cross product. Note that this operation is anticommutative, so
+    * cross(a, b) = -cross(b, a)
     * @param a the left vector Vector
     * @param b the right vector Vector
     * @return the cross product a X b
     */
-   public static Vector crossProduct(Vector a, Vector b) {
+   public static Vector cross(Vector a, Vector b) {
       // check to make sure both vectors are the right length
       if (a.length() != 3) {
          throw new IllegalArgumentException("Invalid vector length (first vector)");
@@ -113,9 +113,9 @@ public class Vector {
       Vector.checkLengths(a, b); // just in case      
       
       double[] entries = new double[] {
-         a.v[1] * b.v[2] - a.v[2] * b.v[1],
-         a.v[2] * b.v[0] - a.v[0] * b.v[2],
-         a.v[0] * b.v[1] - a.v[1] * b.v[0]};
+         a.entries[1] * b.entries[2] - a.entries[2] * b.entries[1],
+         a.entries[2] * b.entries[0] - a.entries[0] * b.entries[2],
+         a.entries[0] * b.entries[1] - a.entries[1] * b.entries[0]};
          
       return new Vector(entries);
    }
@@ -128,8 +128,8 @@ public class Vector {
     * @return a new Vector object whose entries are the differences of
     *         the entries in v1 and v2 (v1 - v2)
     */
-   public static Vector difference(Vector v1, Vector v2) {
-      return Vector.sum(v1, v2.multiply(-1));
+   public static Vector subtract(Vector v1, Vector v2) {
+      return Vector.add(v1, v2.multiply(-1));
    }
    
    /**
@@ -140,17 +140,17 @@ public class Vector {
     * @return the sum of the products of corresponding elements
     */
    public double dot(Vector u) {
-      return Vector.dotProduct(this, u);
+      return Vector.dot(this, u);
    }
    
    /**
-    * dotProduct method computes the dot product of two vectors.
+    * dot method computes the dot product of two vectors.
     * assumes vectors have the same length.
     * @param u1 a Vector object
     * @param u2 a Vector object
     * @return the sum of the products of corresponding elements
     */
-   public static double dotProduct(Vector u1, Vector u2) {
+   public static double dot(Vector u1, Vector u2) {
       Vector.checkLengths(u1, u2);
    
       double sum = 0;
@@ -186,12 +186,12 @@ public class Vector {
     * @return a Vector whose entries have the signs flipped
     */
    public static Vector inverseVector(Vector u) {
-      return Vector.product(u, -1);
+      return Vector.multiply(u, -1);
    }
 
    /**
     * isZero checks to see if all entries are zero.
-    * @return true if all entries in v are zero, false otherwise
+    * @return true if all entries are zero, false otherwise
     */
    public boolean isZero() {
       return Vector.isZero(this);
@@ -199,11 +199,11 @@ public class Vector {
    
    /**
     * isZero checks to see if all entries are zero.
-    * @param v a Vector object
-    * @return true if all entries in v are zero, false otherwise
+    * @param u a Vector object
+    * @return true if all entries in u are zero, false otherwise
     */
-   public static boolean isZero(Vector v) {
-      for (double entry : v.v) {
+   public static boolean isZero(Vector u) {
+      for (double entry : u.entries) {
          if (Math.abs(entry) > Double.MIN_VALUE * 10) { // if a non-zero entry is found
             return false;
          }
@@ -246,36 +246,36 @@ public class Vector {
    
    /**
     * magnitude method is a wrapper for pnorm, with p=2
-    * @param v a Vector object
+    * @param u a Vector object
     * @return the magnitude of the vector
     */
-   public static double magnitude(Vector v) {
-      return Vector.pnorm(v, 2);
+   public static double magnitude(Vector u) {
+      return Vector.pnorm(u, 2);
    }
    
    /**
-    * multiply method accepts a scalar to and multiplies each entry
-    * in v by it.
+    * multiply method accepts a scalar to and multiplies each element of
+    * entries by that value.
     * @param scalar the real number to multiply the entries by
     * @return a Vector object whose entries are the element-wise sums
     *    of the calling vector and the argument
     */
    public Vector multiply(double scalar) {
-      return Vector.product(this, scalar);
+      return Vector.multiply(this, scalar);
    }
    
    /**
     * normalize scales the passed vector by dividing it by its 
     * magnitude. if the zero vector is passed, an IllegalArgumentException 
     * is thrown.
-    * @param v a Vector object
+    * @param u a Vector object
     * @return a Vector object
     */
-   public static Vector normalize(Vector v) {
-      if (v.isZero()) {
+   public static Vector normalize(Vector u) {
+      if (u.isZero()) {
          throw new IllegalArgumentException();
       } else {
-         return v.multiply(1.0/v.magnitude());
+         return u.multiply(1.0/u.magnitude());
       }
    }
    
@@ -321,14 +321,14 @@ public class Vector {
    }
 
    /**
-    * product accepts a Vector object and a scalar and returns
+    * multiply accepts a Vector object and a scalar and returns
     * a Vector whose entries are the entries of the Vector, multiplied
     * by the scalar.
     * @param u a Vector object
     * @param scalar a real number
     * @return the scalar product of the vector and the scalar
     */
-   public static Vector product(Vector u, double scalar) {   
+   public static Vector multiply(Vector u, double scalar) {   
       double[] products = new double[u.length()];
       
       for (int i = 0; i < products.length; i++) {
@@ -346,18 +346,18 @@ public class Vector {
     * @return the scalar triple product a.dot(b.cross(c))
     */
    public static double scalarTripleProduct(Vector a, Vector b, Vector c) {
-      return Vector.dotProduct(a, Vector.crossProduct(b, c));
+      return Vector.dot(a, Vector.cross(b, c));
    }
    
    /**
     * subtract method subtracts the passed Vector from the calling Vector.
-    * @param v a Vector object
+    * @param u a Vector object
     * @return a Vector object whose entries are the difference of the
     *         entries in the calling Vector and the respective entries 
     *         in v
     */
-   public Vector subtract(Vector v) {
-      return Vector.difference(this, v);
+   public Vector subtract(Vector u) {
+      return Vector.subtract(this, u);
    }
    
    /**
@@ -369,7 +369,7 @@ public class Vector {
     * @return a Vector objects whose entries are the sums of corresponding
     *         entries in u1 and u2
     */
-   public static Vector sum(Vector u1, Vector u2) {
+   public static Vector add(Vector u1, Vector u2) {
       Vector.checkLengths(u1, u2);
       
       double[] sums = new double[u1.length()];
@@ -386,7 +386,7 @@ public class Vector {
    /**
     * Returns the entry in the specified position.
     * @param position the position to return
-    * @return the value in v[position]
+    * @return the value in entries[position]
     */
    public double get(int position) {
       return Vector.get(this, position);
@@ -394,12 +394,12 @@ public class Vector {
    
    /**
     * Returns the entry in the specified position.
-    * @param v a Vector object
+    * @param u a Vector object
     * @param position the position to return
-    * @return the value in v[position]
+    * @return the value in u[position]
     */
-   public static double get(Vector v, int position) {
-      return v.v[position];
+   public static double get(Vector u, int position) {
+      return u.entries[position];
    }
    
    /**
@@ -414,36 +414,36 @@ public class Vector {
    /**
     * getLength method returns the number of entries in the 
     * vector.
-    * @param v a Vector object
-    * @return the length of v
+    * @param u a Vector object
+    * @return the length of u
     */
-   public static int length(Vector v) {
-      return v.v.length;
+   public static int length(Vector u) {
+      return u.entries.length;
    }
       
    /**
-    * Returns a copy of v, not a reference to v.
-    * @return a copy of the array v
+    * Returns a copy of entries, not a reference to entries.
+    * @return a copy of the array entries
     */
-   public double[] getV() {
-      double[] v = new double[this.v.length];
+   public double[] getEntries() {
+      double[] entries = new double[this.entries.length];
       
-      for (int i = 0; i < this.v.length; i++) {
-         v[i] = this.v[i];
+      for (int i = 0; i < this.entries.length; i++) {
+         entries[i] = this.entries[i];
       }
       
-      return v;
+      return entries;
    }
    
    /**
-    * Sets the values in the v array.
-    * @param v an array of doubles
+    * Sets the values in the entries array.
+    * @param entries an array of doubles
     */
-   public void setV(double[] v) {
-      this.v = new double[v.length];
+   public void setEntries(double[] entries) {
+      this.entries = new double[entries.length];
       
-      for (int i = 0; i < v.length; i++) {
-         this.v[i] = v[i];
+      for (int i = 0; i < entries.length; i++) {
+         this.entries[i] = entries[i];
       }
    }
    
@@ -451,10 +451,29 @@ public class Vector {
     * set method modifies the element at index to equal value.
     * @param index the index we want to modify
     * @param value the new value
+    * @return a Vector with the value at index updated
     */
-   public void set(int index, double value) {
-      this.v[index] = value;
+   public Vector set(int index, double value) {
+      return Vector.set(this, index, value);
    }
+
+   /**
+    * set method modifies the element at index to equal value.
+    * @param u a Vector object
+    * @param index the index we want to modify
+    * @param value the new value
+    * @return a Vector with the value at index updated
+    */   
+   public static Vector set(Vector u, int index, double value) {
+      if (index < 0 || index >= u.length()) {
+         throw new IllegalArgumentException("Index is out of range");
+      }
+   
+      double[] entries = new double[u.entries.length];
+      entries[index] = value;
+      
+      return new Vector(entries);
+   }   
    
    /**
     * Return a String containing the vector represented as a row in brackets, e.g.
@@ -466,10 +485,10 @@ public class Vector {
       String str = "[";
       String sep = ", ";
       
-      for (int i = 0; i < this.v.length; i++) {
-         str += this.v[i];
+      for (int i = 0; i < this.entries.length; i++) {
+         str += this.entries[i];
          
-         if (i < (this.v.length - 1)) { // if we're not at the last entry
+         if (i < (this.entries.length - 1)) { // if we're not at the last entry
             str += sep;
          }
       }

@@ -9,20 +9,20 @@ import linearalgebra.Vector;
 
 public class Matrix {
    /**
-    * matrix is a 2D array of doubles to hold the entries in the Matrix
+    * entries is a 2D array of doubles to hold the entries in the Matrix
     */
-   private double[][] matrix;
+   private double[][] entries;
    
    /**
-    * accepts a 2D array of doubles and copies them into the matrix field.
-    * @param matrix a 2D array of doubles
+    * accepts a 2D array of doubles and copies them into the entries field.
+    * @param entries a 2D array of doubles
     */
-   public Matrix(double[][] matrix) {
-      this.matrix = new double[matrix.length][matrix[0].length];
+   public Matrix(double[][] entries) {
+      this.entries = new double[entries.length][entries[0].length];
       
-      for (int row = 0; row < matrix.length; row++) {
-         for (int col = 0; col < matrix[row].length; col++) {
-            this.matrix[row][col] = matrix[row][col];
+      for (int row = 0; row < entries.length; row++) {
+         for (int col = 0; col < entries[row].length; col++) {
+            this.entries[row][col] = entries[row][col];
          }
       }
    }
@@ -32,11 +32,11 @@ public class Matrix {
     * @param m the Matrix object we want to copy
     */
    public Matrix(Matrix m) {
-      this.matrix = new double[m.getNumRows()][m.getNumColumns()];
+      this.entries = new double[m.getNumRows()][m.getNumColumns()];
       
-      for (int row = 0; row < m.matrix.length; row++) {
-         for (int col = 0; col < m.matrix[row].length; col++) {
-            this.matrix[row][col] = m.matrix[row][col];
+      for (int row = 0; row < m.entries.length; row++) {
+         for (int col = 0; col < m.entries[row].length; col++) {
+            this.entries[row][col] = m.entries[row][col];
          }
       }
    }
@@ -68,9 +68,9 @@ public class Matrix {
       
       double[][] entries = new double[a.getNumRows()][a.getNumColumns()];
       
-      for (int row = 0; row < a.matrix.length; row++) {
-         for (int col = 0; col < a.matrix[0].length; col++) {
-            entries[row][col] = a.matrix[row][col] + b.matrix[row][col];
+      for (int row = 0; row < a.entries.length; row++) {
+         for (int col = 0; col < a.entries[0].length; col++) {
+            entries[row][col] = a.entries[row][col] + b.entries[row][col];
          }
       }
       
@@ -80,63 +80,63 @@ public class Matrix {
    /**
     * adds the passed Vector to the specified column of the calling Matrix.
     * throws an IllegalArgumentException if the dimensions don't line up.
-    * @param v a Vector object
-    * @param col the column in m to which we want to add v
-    * @return a Matrix with the values in v added to the specified column
+    * @param u a Vector object
+    * @param col the column in m to which we want to add u
+    * @return a Matrix with the values in u added to the specified column
     */
-   public Matrix addVectorToColumn(Vector v, int col) {
-      return Matrix.addVectorToColumn(this, v, col);
+   public Matrix addVectorToColumn(Vector u, int col) {
+      return Matrix.addVectorToColumn(this, u, col);
    }  
    
    /**
     * adds the passed Vector to the specified column of the passed Matrix.
     * throws an IllegalArgumentException if the dimensions don't line up.
     * @param m a Matrix object
-    * @param v a Vector object
-    * @param col the column in m to which we want to add v
-    * @return a Matrix with the values in v added to the specified column
+    * @param u a Vector object
+    * @param col the column in m to which we want to add u
+    * @return a Matrix with the values in u added to the specified column
     */
-   public static Matrix addVectorToColumn(Matrix m, Vector v, int col) {
+   public static Matrix addVectorToColumn(Matrix m, Vector u, int col) {
       if (col < 0 || col >= m.getNumColumns()) {
          throw new IllegalArgumentException("col is not in the correct range");
       }
    
-      if (v.length() != m.getColumn(col).length()) {
+      if (u.length() != m.getColumn(col).length()) {
          throw new IllegalArgumentException("Vector length does not match row length");
       }
       
-      return m.setColumn(col, m.getColumn(col).add(v));
+      return m.setColumn(col, m.getColumn(col).add(u));
    }
    
    /**
     * adds the passed Vector to the specified row of the calling Matrix.
     * throws an IllegalArgumentException if the dimensions don't line up.
-    * @param v a Vector object
-    * @param row the row in m to which we want to add v
-    * @return a Matrix with the values in v added to the specified row
+    * @param u a Vector object
+    * @param row the row in m to which we want to add u
+    * @return a Matrix with the values in u added to the specified row
     */
-   public Matrix addVectorToRow(Vector v, int row) {
-      return Matrix.addVectorToRow(this, v, row);
+   public Matrix addVectorToRow(Vector u, int row) {
+      return Matrix.addVectorToRow(this, u, row);
    }   
    
    /**
     * adds the passed Vector to the specified row of the passed Matrix.
     * throws an IllegalArgumentException if the dimensions don't line up.
     * @param m a Matrix object
-    * @param v a Vector object
-    * @param row the row in m to which we want to add v
-    * @return a Matrix with the values in v added to the specified row
+    * @param u a Vector object
+    * @param row the row in m to which we want to add u
+    * @return a Matrix with the values in u added to the specified row
     */
-   public static Matrix addVectorToRow(Matrix m, Vector v, int row) {
+   public static Matrix addVectorToRow(Matrix m, Vector u, int row) {
       if (row < 0 || row >= m.getNumRows()) {
          throw new IllegalArgumentException("row is not in the correct range");
       }
    
-      if (v.length() != m.getRow(row).length()) {
+      if (u.length() != m.getRow(row).length()) {
          throw new IllegalArgumentException("Vector length does not match row length");
       }
       
-      return m.setRow(row, m.getRow(row).add(v));
+      return m.setRow(row, m.getRow(row).add(u));
    }
 
    /**
@@ -174,7 +174,7 @@ public class Matrix {
     * The determinant is not defined for non-square matrices.
     * Determinant is computed recursively via cofactor expansion across
     * the first row:
-    * https://en.wikipedia.org/wiki/Determinant#Laplace's_expansion_and_the_adjugate_matrix
+    * https://en.wikipedia.org/wiki/Determinant#Laplace's_expansion_and_the_adjugate_entries
     * For a 1x1 Matrix, the determinant is the only entry.
     * @param m a Matrix object
     * @return the determinant of the Matrix (a double) 
@@ -204,10 +204,10 @@ public class Matrix {
    
    /**
     * dropColumn accepts a non-negative int corresponding to a column index, and 
-    * returns the matrix, with that column dropped.
+    * returns the Matrix, with that column dropped.
     * It does this by passing all columns except the column to be dropped
     * to fromColumnVectors.
-    * @param col a column index {@literal (0 < col < matrix[0].length)}
+    * @param col a column index {@literal (0 < col < entries[0].length)}
     * @return a Matrix with the specified column dropped
     */  
    public Matrix dropColumn(int col) {
@@ -216,11 +216,11 @@ public class Matrix {
    
    /**
     * dropColumn accepts a Matrix object and a non-negative int corresponding
-    * to a column index, and returns the matrix, with that column dropped.
+    * to a column index, and returns the Matrix, with that column dropped.
     * It does this by passing all columns except the column to be dropped
     * to fromColumnVectors.
     * @param m a Matrix object
-    * @param col a column index {@literal (0 < col < matrix[0].length)}
+    * @param col a column index {@literal (0 < col < entries[0].length)}
     * @return a Matrix with the specified column dropped
     */
    public static Matrix dropColumn(Matrix m, int col) {
@@ -232,7 +232,7 @@ public class Matrix {
       
       Vector[] columns = new Vector[m.getNumColumns() - 1];
       
-      for (int i = 0; i < m.matrix[0].length; i++) {
+      for (int i = 0; i < m.entries[0].length; i++) {
          // if we're to the left of the column to be dropped, columns[i] = m.getColumn(i)
          if (i < col) {
             columns[i] = m.getColumn(i);
@@ -249,10 +249,10 @@ public class Matrix {
    
    /**
     * dropRow accepts a non-negative int corresponding to a row index, and 
-    * returns the matrix, with that row dropped.
+    * returns the Matrix, with that row dropped.
     * It does this by passing all rows except the row to be dropped
     * to fromRowVectors.
-    * @param row a row index {@literal (0 < row < matrix.length)}
+    * @param row a row index {@literal (0 < row < entries.length)}
     * @return a Matrix with the specified row dropped
     */  
    public Matrix dropRow(int row) {
@@ -261,10 +261,10 @@ public class Matrix {
    
    /**
     * dropRow accepts a Matrix object and a non-negative int corresponding
-    * to a row index, and returns the matrix, with that row dropped. It does 
+    * to a row index, and returns the Matrix, with that row dropped. It does 
     * this by passing all row except the row to be dropped to fromRowVectors.
     * @param m a Matrix object
-    * @param row a row {@literal index (0 < col < matrix.length)}
+    * @param row a row {@literal index (0 < col < entries.length)}
     * @return a Matrix with the specified row dropped
     */
    public static Matrix dropRow(Matrix m, int row) {
@@ -272,19 +272,19 @@ public class Matrix {
          throw new IllegalArgumentException("row is out of range");
       }
       
-      Vector[] v = new Vector[m.getNumRows()-1];
+      Vector[] u = new Vector[m.getNumRows()-1];
       
       for (int i = 0; i < m.getNumRows(); i++) {
          if (i < row) {
-            v[i] = m.getRow(i);
+            u[i] = m.getRow(i);
          }
          
          if (i > row) {
-            v[i-1] = m.getRow(i);
+            u[i-1] = m.getRow(i);
          }
       }
       
-      return Matrix.fromRowVectors(v);
+      return Matrix.fromRowVectors(u);
    }
     
    /**
@@ -306,8 +306,8 @@ public class Matrix {
     * @return a Matrix whose rows are the passed vectors
     */ 
    public static Matrix fromRowVectors(Vector ... vectors) {
-      for (Vector v : vectors) {
-         if (v.length() != vectors[0].length()) {
+      for (Vector u : vectors) {
+         if (u.length() != vectors[0].length()) {
             throw new IllegalArgumentException("Vectors do not have the same length.");
          }
       }      
@@ -341,19 +341,19 @@ public class Matrix {
     * @return the entry in the row-th row and col-th col of m
     */
    public static double getEntry(Matrix m, int row, int col) {
-      if (row < 0 || row > m.matrix.length) {
+      if (row < 0 || row > m.entries.length) {
          throw new IllegalArgumentException("Invalid value for row.");
       }
       
-      if (col < 0 || col > m.matrix[0].length) {
+      if (col < 0 || col > m.entries[0].length) {
          throw new IllegalArgumentException("Invalid value for col.");
       }
       
-      return m.matrix[row][col];  
+      return m.entries[row][col];  
    }
    
    /**
-    * @return the number of columns in the matrix
+    * @return the number of columns in the Matrix
     */
    public int getNumColumns() {
       return Matrix.getNumColumns(this);
@@ -361,14 +361,14 @@ public class Matrix {
 
    /**
     * @param m a Matrix object
-    * @return the number of columns in the matrix
+    * @return the number of columns in the Matrix
     */   
    public static int getNumColumns(Matrix m) {
-      return m.matrix[0].length;
+      return m.entries[0].length;
    }  
 
    /**
-    * @return the number of rows in the matrix
+    * @return the number of rows in the Matrix
     */
    public int getNumRows() {
       return Matrix.getNumRows(this);
@@ -376,17 +376,17 @@ public class Matrix {
    
    /**
     * @param m a Matrix object
-    * @return the number of columns in the matrix
+    * @return the number of columns in the Matrix
     */
    public static int getNumRows(Matrix m) {
-      return m.matrix.length;
+      return m.entries.length;
    } 
 
    /**
     * accepts a column number (starting at 0) and returns the entries in
     * the column as a Vector object
     * @param col the number of the desired column 
-    *        (starting at 0, up to this.matrix[0].length-1)
+    *        (starting at 0, up to this.entries[0].length-1)
     * @return a Vector containing the entries in the desired column
     */   
    public Vector getColumn(int col) {
@@ -398,21 +398,18 @@ public class Matrix {
     * the column as a Vector object
     * @param m the Matrix object we want the column from
     * @param col the number of the desired column 
-    *        (starting at 0, up to this.matrix[0].length-1)
+    *        (starting at 0, up to this.entries[0].length-1)
     * @return a Vector containing the entries in the desired column
     */   
    public static Vector getColumn(Matrix m, int col) {
-      if (m == null) {
-         throw new IllegalArgumentException("Matrix is null.");
-      }
-      if (col >= m.matrix[0].length || col < 0) {
-         throw new IllegalArgumentException("Column does not exist in matrix.");
+      if (col >= m.entries[0].length || col < 0) {
+         throw new IllegalArgumentException("Column is out of range");
       } 
       
-      double[] columnVector = new double[m.matrix.length];
+      double[] columnVector = new double[m.entries.length];
       
-      for (int row = 0; row < m.matrix.length; row++) {
-         columnVector[row] = m.matrix[row][col];
+      for (int row = 0; row < m.entries.length; row++) {
+         columnVector[row] = m.entries[row][col];
       }  
       
       return new Vector(columnVector);  
@@ -421,7 +418,7 @@ public class Matrix {
    /**
     * accepts a row number (starting at 0) and returns the entries in
     * the row as a Vector object
-    * @param row the number of the desired row (starting at 0, up to this.matrix.length-1)
+    * @param row the number of the desired row (starting at 0, up to this.entries.length-1)
     * @return a Vector containing the entries in the desired row
     */
    public Vector getRow(int row) {
@@ -432,25 +429,22 @@ public class Matrix {
     * accepts a row number (starting at 0) and returns the entries in
     * the row as a Vector object
     * @param m the Matrix object we want the row from
-    * @param row the number of the desired row (starting at 0, up to this.matrix.length-1)
+    * @param row the number of the desired row (starting at 0, up to this.entries.length-1)
     * @return a Vector containing the entries in the desired row
     */
    public static Vector getRow(Matrix m, int row) {
-      if (m == null) {
-         throw new IllegalArgumentException("Matrix is null.");
-      }
-      if (row >= m.matrix.length || row < 0) {
-         throw new IllegalArgumentException("Row does not exist in matrix.");
+      if (row >= m.entries.length || row < 0) {
+         throw new IllegalArgumentException("Row does not exist in Matrix");
       }
       
-      return new Vector(m.matrix[row]);
+      return new Vector(m.entries[row]);
    }
    
    /**   
-    * getIdentityMatrix returns an n by n matrix with all zeroes
+    * getIdentityMatrix returns an n by n Matrix with all zeroes
     * and ones on the diagonal.
     * @param n an integer greater than or equal to 1
-    * @return an n-by-n matrix with ones on the diagonal and zeroes
+    * @return an n-by-n Matrix with ones on the diagonal and zeroes
     *         everywhere else
     */
    public static Matrix identityMatrix(int n) {
@@ -489,12 +483,12 @@ public class Matrix {
          throw new IllegalArgumentException("Matrix is not square.");
       }  
    
-      for (int row = 0; row < m.matrix.length; row++) {
-         for (int col = 0; col < m.matrix[row].length; col++) {
+      for (int row = 0; row < m.entries.length; row++) {
+         for (int col = 0; col < m.entries[row].length; col++) {
             if (row != col) { // if we're not on the diagonal
             
                // if the value is non-zero
-               if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+               if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
                   return false;
                }
             }
@@ -521,9 +515,9 @@ public class Matrix {
     */
    public static boolean isLowerTriangular(Matrix m) {
       
-      for (int row = 1; row < m.matrix.length; row++) {
+      for (int row = 1; row < m.entries.length; row++) {
          for (int col = 0; col < row; col++) { // only below the diagonal
-            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
                return false;
             }
          }
@@ -533,9 +527,9 @@ public class Matrix {
    }
    
    /**
-    * isSparse checks to see if most of the matrix entries are zero.
+    * isSparse checks to see if most of the Matrix entries are zero.
     * "most" is defined as no more than max(num columns, num rows)
-    * @return true if the matrix contains very few nonzero entries,
+    * @return true if the Matrix contains very few nonzero entries,
     *         false otherwise
     */
    public boolean isSparse() {
@@ -543,18 +537,18 @@ public class Matrix {
    }
    
    /**
-    * isSparse checks to see if most of the matrix entries are zero.
+    * isSparse checks to see if most of the Matrix entries are zero.
     * "most" is defined as no more than max(num columns, num rows)
     * @param m a Matrix object
-    * @return true if the matrix contains very few nonzero entries,
+    * @return true if the Matrix contains very few nonzero entries,
     *         false otherwise
     */
    public static boolean isSparse(Matrix m) {
       int numNonzero = 0;
       
-      for (int row = 0; row < m.matrix.length; row++) {
-         for (int col = 0; col < m.matrix[row].length; col++) {
-            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+      for (int row = 0; row < m.entries.length; row++) {
+         for (int col = 0; col < m.entries[row].length; col++) {
+            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
                numNonzero++;
             }
          }
@@ -564,10 +558,10 @@ public class Matrix {
    }
    
    /**
-    * isSparse checks to see if most of the matrix entries are zero.
+    * isSparse checks to see if most of the Matrix entries are zero.
     * "most" is defined as no more the specified proportion
     * @param p the desired proportion {@literal (0 < p <= 1)}
-    * @return true if the matrix contains very few nonzero entries,
+    * @return true if the Matrix contains very few nonzero entries,
     *         false otherwise
     */
    public boolean isSparse(double p) {
@@ -575,11 +569,11 @@ public class Matrix {
    }
    
    /**
-    * isSparse checks to see if most of the matrix entries are zero.
+    * isSparse checks to see if most of the Matrix entries are zero.
     * "most" is defined as no more the specified proportion
     * @param m a Matrix object
     * @param p the desired proportion {@literal (0 < p <= 1)}
-    * @return true if the matrix contains very few nonzero entries,
+    * @return true if the Matrix contains very few nonzero entries,
     *         false otherwise
     */
    public static boolean isSparse(Matrix m, double p) {
@@ -589,9 +583,9 @@ public class Matrix {
    
       int numNonzero = 0;
       
-      for (int row = 0; row < m.matrix.length; row++) {
-         for (int col = 0; col < m.matrix[row].length; col++) {
-            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+      for (int row = 0; row < m.entries.length; row++) {
+         for (int col = 0; col < m.entries[row].length; col++) {
+            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
                numNonzero++;
             }
          }
@@ -638,9 +632,9 @@ public class Matrix {
     */
    public static boolean isUpperTriangular(Matrix m) {
       
-      for (int row = 0; row < m.matrix.length; row++) {
-         for (int col = row+1; col < m.matrix[row].length; col++) { // only below the diagonal
-            if (Math.abs(m.matrix[row][col]) >= 10 * Double.MIN_VALUE) {
+      for (int row = 0; row < m.entries.length; row++) {
+         for (int col = row+1; col < m.entries[row].length; col++) { // only below the diagonal
+            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
                return false;
             }
          }
@@ -652,7 +646,7 @@ public class Matrix {
    /**
     * multiplies each entry in the Matrix m by a real number.
     * @param x a real number (double)
-    * @return a Matrix whose entries are the entries in the calling matrix, 
+    * @return a Matrix whose entries are the entries in the calling entries, 
     *         multiplied by x
     */   
    public Matrix multiply(double x) {
@@ -679,61 +673,60 @@ public class Matrix {
    }
    
    /**
-    * multplies the given vector by the calling matrix.
-    * Number of entries in the vector must match the
-    * number of columns in the matrix passed.
+    * multplies the given vector by the calling entries. Number of entries in the 
+    * vector must match the number of columns in calling Matrix.
     *
     * M = | a b c |
     *     | d e f |
     * 
-    * v = | x |
+    * u = | x |
     *     | y |
     *     | z |
     *
-    * Mv = | ax + by + cz |
+    * Mu = | ax + by + cz |
     *      | dx + ey + fz |
     *
     * The n-th entry in the returned vector is the dot product of the nth-row of m
-    * with v.
-    * @param v a Vector object
-    * @return a Vector object containing the linear combination mv
+    * with u.
+    * @param u a Vector object
+    * @return a Vector object containing the linear combination mu
     */
-   public Vector multiply(Vector v) {
-      return Matrix.multiply(this, v);
+   public Vector multiply(Vector u) {
+      return Matrix.multiply(this, u);
    }  
    
    /**
-    * multiplies the given vector by the given matrix. this method treats the
+    * multiplies the given vector by the given entries. this method treats the
     * vector as a column vector. Number of entries in the vector must match the
-    * number of columns in the matrix passed.
+    * number of columns in the entries passed.
     *
     * M = | a b c |
     *     | d e f |
     * 
-    * v = | x |
+    * u = | x |
     *     | y |
     *     | z |
     *
-    * Mv = | ax + by + cz |
+    * Mu = | ax + by + cz |
     *      | dx + ey + fz |
     *
     * The n-th entry in the returned vector is the dot product of the nth-row of m
-    * with v.
+    * with u.
     *
     * @param m the Matrix object
-    * @param v the Vector object
-    * @return a Vector object containing the linear combination mv
+    * @param u the Vector object
+    * @return a Vector object containing the linear combination mu
     */
    
-   public static Vector multiply(Matrix m, Vector v) {
-      if (v.length() != m.getNumRows()) {
+   public static Vector multiply(Matrix m, Vector u) {
+      if (u.length() != m.getNumRows()) {
          throw new IllegalArgumentException("Incompatible shapes.\n");
       }
    
-      double[] result = new double[m.matrix.length];
+      double[] result = new double[m.entries.length];
       
-      for (int i = 0; i < m.matrix.length; i++) {
-         result[i] = m.getRow(i).dot(v);
+      for (int i = 0; i < m.entries.length; i++) {
+         result[i] = m.getRow(i).dot(u);
       }
       
       return new Vector(result);
@@ -741,21 +734,21 @@ public class Matrix {
    
    /**
     * If the calling Matrix is a, returns the product ab.
-    * Number of columns of calling matrix must match number of
+    * Number of columns of calling entries must match number of
     * rows of passed Matrix.
     * @param b a Matrix object
-    * @return the product ab, where a is the calling matrix
+    * @return the product ab, where a is the calling entries
     */
    public Matrix multiply(Matrix b) {
       return Matrix.multiply(this, b);
    }
    
    /**
-    * multiplies two matrices together via matrix multiplication.
+    * multiplies two matrices together via entries multiplication.
     * the [i][j]-th entry is the dot product of row i from Matrix a
     * and column j from Matrix b.
     * if a is an m-by-n Matrix and b is an n-by-p Matrix, then the
-    * returned matrix ab will be an m-by-p Matrix.
+    * returned entries ab will be an m-by-p Matrix.
     * The number of columns in a must match the number of rows in b,
     * or else an IllegalArgumentException will be thrown.
     * @param a an m-by-n Matrix object
@@ -771,7 +764,7 @@ public class Matrix {
       
       for (int row = 0; row < a.getNumRows(); row++) {
          for (int col = 0; col < b.getNumColumns(); col++) {
-            entries[row][col] = Vector.dotProduct(a.getRow(row), b.getColumn(col));
+            entries[row][col] = Vector.dot(a.getRow(row), b.getColumn(col));
          }
       }
       
@@ -784,11 +777,11 @@ public class Matrix {
     * if the column length and the Vector length do not match, an
     * IllegalArgumentException will be thrown.
     * @param col an index for the column
-    * @param v a Vector object
-    * @return a Matrix object with the col-th row replaced with v
+    * @param u a Vector object
+    * @return a Matrix object with the col-th row replaced with u
     */   
-   public Matrix setColumn(int col, Vector v) {
-      return Matrix.setColumn(this, col, v);
+   public Matrix setColumn(int col, Vector u) {
+      return Matrix.setColumn(this, col, u);
    }
 
    /**
@@ -812,11 +805,11 @@ public class Matrix {
     * IllegalArgumentException will be thrown.
     * @param m a Matrix object
     * @param col an index for the col
-    * @param v a Vector object containing the entries we want
-    * @return a Matrix object with the col-th column replaced with v
+    * @param u a Vector object containing the entries we want
+    * @return a Matrix object with the col-th column replaced with u
     */
-   public static Matrix setColumn(Matrix m, int col, Vector v) {
-      if (m.matrix.length != v.length()) {
+   public static Matrix setColumn(Matrix m, int col, Vector u) {
+      if (m.entries.length != u.length()) {
          throw new IllegalArgumentException("Vector length and does not match column length.");
       }
       
@@ -826,8 +819,8 @@ public class Matrix {
       
       Matrix n = new Matrix(m);
       
-      for (int i = 0; i < n.matrix.length; i++) {
-         n.matrix[i][col] = v.get(i);
+      for (int i = 0; i < n.entries.length; i++) {
+         n.entries[i][col] = u.get(i);
       }
       
       return n;
@@ -845,7 +838,7 @@ public class Matrix {
     * @return a Matrix object with the col-th column replaced with v
     */
    public static Matrix setColumn(Matrix m, int col, double[] v) {
-      if (m.matrix.length != v.length) {
+      if (m.entries.length != v.length) {
          throw new IllegalArgumentException("Array length and does not match row length.");
       }
       
@@ -870,7 +863,7 @@ public class Matrix {
       }
    
       Matrix n = new Matrix(m);
-      n.matrix[row][col] = value;
+      n.entries[row][col] = value;
       return n;
    }
     
@@ -881,11 +874,11 @@ public class Matrix {
     * if the row length and the Vector length do not match, an
     * IllegalArgumentException will be thrown.
     * @param row an index for the row
-    * @param v a Vector object
-    * @return a Matrix object with the row-th row replaced with v
+    * @param u a Vector object
+    * @return a Matrix object with the row-th row replaced with u
     */   
-   public Matrix setRow(int row, Vector v) {
-      return Matrix.setRow(this, row, v);
+   public Matrix setRow(int row, Vector u) {
+      return Matrix.setRow(this, row, u);
    }
 
    /**
@@ -909,11 +902,11 @@ public class Matrix {
     * IllegalArgumentException will be thrown.
     * @param m a Matrix object
     * @param row an index for the row
-    * @param v a Vector object containing the entries we want
-    * @return a Matrix object with the row-th row replaced with v
+    * @param u a Vector object containing the entries we want
+    * @return a Matrix object with the row-th row replaced with u
     */
-   public static Matrix setRow(Matrix m, int row, Vector v) {
-      if (m.matrix[row].length != v.length()) {
+   public static Matrix setRow(Matrix m, int row, Vector u) {
+      if (m.entries[row].length != u.length()) {
          throw new IllegalArgumentException("Vector length and does not match row length.");
       }
       
@@ -923,8 +916,8 @@ public class Matrix {
       
       Matrix n = new Matrix(m);
       
-      for (int i = 0; i < n.matrix[row].length; i++) {
-         n.matrix[row][i] = v.get(i);
+      for (int i = 0; i < n.entries[row].length; i++) {
+         n.entries[row][i] = u.get(i);
       }
       
       return n;
@@ -946,7 +939,7 @@ public class Matrix {
          throw new IllegalArgumentException("Invalid row: " + row);
       }
       
-      if (m.matrix[row].length != v.length) {
+      if (m.entries[row].length != v.length) {
          throw new IllegalArgumentException("Array length and does not match row length.");
       }
       
@@ -960,6 +953,29 @@ public class Matrix {
     */
    public static int[] shape(Matrix m) {
       return new int[] {m.getNumRows(), m.getNumColumns()};
+   }
+   
+   /**
+    * Subtracts the entries of n from the corresponding entries in m, and
+    * returns the matrix this-n. this and n must have the same shape, or an
+    * IllegalArgumentException will be thrown.
+    * @param n the matrix on the right of m-n
+    * @return a Matrix where each entry is this[row][col] - n[row][col]
+    */
+   public Matrix subtract(Matrix n) {
+      return Matrix.subtract(this, n);
+   }  
+   
+   /**
+    * Subtracts the entries of n from the corresponding entries in m, and
+    * returns the matrix m-n. m and n must have the same shape, or an
+    * IllegalArgumentException will be thrown.
+    * @param m the matrix on the left of m-n
+    * @param n the matrix on the right of m-n
+    * @return a Matrix where each entry is m[row][col] - n[row][col]
+    */
+   public static Matrix subtract(Matrix m, Matrix n) {
+      return Matrix.add(m, Matrix.multiply(n, -1));
    }
 
    /**
@@ -1028,8 +1044,8 @@ public class Matrix {
    
    
    /**
-    * returns the sum of the entries on the diagonal of a square matrix, which is
-    * also the sum of the matrix's eigenvalues
+    * returns the sum of the entries on the diagonal of a square entries, which is
+    * also the sum of the entries's eigenvalues
     * @return the sum of the entries on the diagonal
     */
    public double trace() {
@@ -1037,14 +1053,14 @@ public class Matrix {
    }
    
    /**
-    * returns the sum of the entries on the diagonal of a square matrix, which is
-    * also the sum of the matrix's eigenvalues
+    * returns the sum of the entries on the diagonal of a square entries, which is
+    * also the sum of the entries's eigenvalues
     * @param m a square Matrix object
     * @return the sum of the entries on the diagonal
     */
    public static double trace(Matrix m) {
       if (!Matrix.isSquare(m)) {
-         throw new IllegalArgumentException("Trace is not defined for non-square matrix");
+         throw new IllegalArgumentException("Trace is not defined for non-square entries");
       }
       
       double trace = 0;
@@ -1057,7 +1073,7 @@ public class Matrix {
    }
    
    /**
-    * transposes the matrix. swaps the rows and columns.
+    * transposes the entries. swaps the rows and columns.
     * @return the transpose of the Matrix object
     */
    public Matrix transpose() {
@@ -1065,7 +1081,7 @@ public class Matrix {
    }   
    
    /**
-    * transposes the matrix. swaps the rows and columns.
+    * transposes the entries. swaps the rows and columns.
     * @param m a Matrix object
     * @return the transpose of the Matrix object
     */
@@ -1074,7 +1090,7 @@ public class Matrix {
       
       for (int row = 0; row < n.length; row++) {
          for (int col = 0; col < n[row].length; col++) {
-            n[row][col] = m.matrix[col][row];
+            n[row][col] = m.entries[col][row];
          }
       }
       
@@ -1082,7 +1098,7 @@ public class Matrix {
    }
    
    /**
-    * returns a String containing the matrix entries in the following format:
+    * returns a String containing the entries entries in the following format:
     * [[1.2, 3.4, ..., 8.9],
     *  [9.7, 7.5, ..., 3.1]]
     * @return a String representation of the Matrix's entries
@@ -1090,10 +1106,10 @@ public class Matrix {
    public String toString() {
       String str = "[";
       
-      for (int i = 0; i < this.matrix.length; i++) {
+      for (int i = 0; i < this.entries.length; i++) {
          str += Matrix.getRow(this, i);
          
-         if (i < this.matrix.length - 1) {
+         if (i < this.entries.length - 1) {
             str += ",\n ";
          } else {
             str += "]";
