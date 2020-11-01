@@ -170,6 +170,14 @@ public class Matrix {
    }
    
    /**
+    * determinant is an instance wrapper for static determinant method.
+    * @return the determinant of the calling matrix.
+    */
+   public double determinant() {
+      return Matrix.determinant(this);
+   }
+   
+   /**
     * determinant computes the determinant of a square Matrix object.
     * The determinant is not defined for non-square matrices.
     * Determinant is computed recursively via cofactor expansion across
@@ -192,7 +200,7 @@ public class Matrix {
          for (int col = 0; col < m.getNumColumns(); col++) {
             determinant += Math.pow(-1, col) *  
                            m.getEntry(0, col) *
-                           Matrix.determinant(m.minorMatrix(0, col));
+                           m.minorMatrix(0, col).determinant();
          }
       }
 
