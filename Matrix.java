@@ -188,9 +188,6 @@ public class Matrix {
       
       if (Matrix.getNumRows(m) == 1) {
          determinant = Matrix.getEntry(m, 0, 0);
-      } else if (Matrix.getNumRows(m) == 2) {
-         determinant =  (m.getEntry(0,0) * m.getEntry(1, 1)
-                        - m.getEntry(0,1) * m.getEntry(1,0));
       } else {
          for (int col = 0; col < m.getNumColumns(); col++) {
             determinant += Math.pow(-1, col) *  
