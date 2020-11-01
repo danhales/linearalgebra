@@ -76,6 +76,8 @@ public class Vector {
    /**
     * checkLengths method accepts two vectors and throws and 
     * IllegalArgumentException if they are not the same lengths.
+    * @param u1 a Vector object
+    * @param u2 a Vector object
     */
    public static void checkLengths(Vector u1, Vector u2) {
       if (u1.length() != u2.length()) {
@@ -161,7 +163,7 @@ public class Vector {
    }
    
    /**
-    * identityVector returns an identity vector (whose entries are
+    * identityVector returns an additive identity vector (whose entries are
     * all zeros).
     * @param length the length of the vector
     * @return a vector with all zeros
@@ -171,7 +173,7 @@ public class Vector {
    }
    
    /**
-    * inverse returns the inverse of the calling vector.
+    * inverse returns the additive inverse of the calling vector.
     * @return a Vector with the signs flipped on all entries
     */
    public Vector inverse() {
@@ -186,14 +188,23 @@ public class Vector {
    public static Vector inverseVector(Vector u) {
       return Vector.product(u, -1);
    }
-   
+
    /**
     * isZero checks to see if all entries are zero.
     * @return true if all entries in v are zero, false otherwise
     */
    public boolean isZero() {
-      for (double entry : v) {
-         if (Math.abs(entry) > 0.0000000001) { // if a non-zero entry is found
+      return Vector.isZero(this);
+   }   
+   
+   /**
+    * isZero checks to see if all entries are zero.
+    * @param v a Vector object
+    * @return true if all entries in v are zero, false otherwise
+    */
+   public static boolean isZero(Vector v) {
+      for (double entry : v.v) {
+         if (Math.abs(entry) > Double.MIN_VALUE * 10) { // if a non-zero entry is found
             return false;
          }
       }
@@ -207,6 +218,7 @@ public class Vector {
     * the weights array does not match the length of the vectors array
     * @param vectors an array of Vector objects
     * @param weights an array of doubles to weight the sum
+    * @return the linear combination of the vectors with the weights
     */
    public static Vector linearCombination(Vector[] vectors, double[] weights) {
       if (vectors.length != weights.length) {
@@ -225,17 +237,26 @@ public class Vector {
    }
    
    /**
-    * magnitude method is a wrapper for normL2
+    * magnitude method is a wrapper for pnorm, with p=2
     * @return the magnitude of the vector
     */
    public double magnitude() {
-      return Vector.pnorm(this, 2);
+      return magnitude(this);
+   }
+   
+   /**
+    * magnitude method is a wrapper for pnorm, with p=2
+    * @param v a Vector object
+    * @return the magnitude of the vector
+    */
+   public static double magnitude(Vector v) {
+      return Vector.pnorm(v, 2);
    }
    
    /**
     * multiply method accepts a scalar to and multiplies each entry
     * in v by it.
-    * @param u the vector to add onto the calling vector.
+    * @param scalar the real number to multiply the entries by
     * @return a Vector object whose entries are the element-wise sums
     *    of the calling vector and the argument
     */
@@ -247,7 +268,7 @@ public class Vector {
     * normalize scales the passed vector by dividing it by its 
     * magnitude. if the zero vector is passed, an IllegalArgumentException 
     * is thrown.
-    * @param u a Vector object
+    * @param v a Vector object
     * @return a Vector object
     */
    public static Vector normalize(Vector v) {
@@ -273,8 +294,8 @@ public class Vector {
     * (the p-th root of the sum of the p-th power of the absolute value of 
     * the enttries
     * @param u a Vector object
-    * @param p a real number >= 1
-    * @return the L2 norm of the vector
+    * @param p a real number greater than or equal to 1
+    * @return the Lp norm of the vector
     */
    public static double pnorm(Vector u, double p) {
       if (p < 1) {
@@ -292,6 +313,7 @@ public class Vector {
    
    /**
     * an instance method that calls normL1 on the current object.
+    * @param p a real number greater than or equal to 1
     * @return the L2 norm of the calling vector.
     */
    public double pnorm(double p) {
@@ -344,6 +366,8 @@ public class Vector {
     * length.
     * @param u1 a Vector object
     * @param u2 a Vector object
+    * @return a Vector objects whose entries are the sums of corresponding
+    *         entries in u1 and u2
     */
    public static Vector sum(Vector u1, Vector u2) {
       Vector.checkLengths(u1, u2);
@@ -360,12 +384,22 @@ public class Vector {
    // Setters, getters, and overridden methods.
    
    /**
-    * Returns the entry in the passed position.
+    * Returns the entry in the specified position.
     * @param position the position to return
     * @return the value in v[position]
     */
    public double get(int position) {
-      return v[position];
+      return Vector.get(this, position);
+   }
+   
+   /**
+    * Returns the entry in the specified position.
+    * @param v a Vector object
+    * @param position the position to return
+    * @return the value in v[position]
+    */
+   public static double get(Vector v, int position) {
+      return v.v[position];
    }
    
    /**
@@ -374,7 +408,17 @@ public class Vector {
     * @return the length of v
     */
    public int length() {
-      return this.v.length;
+      return Vector.length(this);
+   }
+
+   /**
+    * getLength method returns the number of entries in the 
+    * vector.
+    * @param v a Vector object
+    * @return the length of v
+    */
+   public static int length(Vector v) {
+      return v.v.length;
    }
       
    /**

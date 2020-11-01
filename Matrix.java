@@ -82,6 +82,7 @@ public class Matrix {
     * throws an IllegalArgumentException if the dimensions don't line up.
     * @param v a Vector object
     * @param col the column in m to which we want to add v
+    * @return a Matrix with the values in v added to the specified column
     */
    public Matrix addVectorToColumn(Vector v, int col) {
       return Matrix.addVectorToColumn(this, v, col);
@@ -93,6 +94,7 @@ public class Matrix {
     * @param m a Matrix object
     * @param v a Vector object
     * @param col the column in m to which we want to add v
+    * @return a Matrix with the values in v added to the specified column
     */
    public static Matrix addVectorToColumn(Matrix m, Vector v, int col) {
       if (col < 0 || col >= m.getNumColumns()) {
@@ -111,6 +113,7 @@ public class Matrix {
     * throws an IllegalArgumentException if the dimensions don't line up.
     * @param v a Vector object
     * @param row the row in m to which we want to add v
+    * @return a Matrix with the values in v added to the specified row
     */
    public Matrix addVectorToRow(Vector v, int row) {
       return Matrix.addVectorToRow(this, v, row);
@@ -122,6 +125,7 @@ public class Matrix {
     * @param m a Matrix object
     * @param v a Vector object
     * @param row the row in m to which we want to add v
+    * @return a Matrix with the values in v added to the specified row
     */
    public static Matrix addVectorToRow(Matrix m, Vector v, int row) {
       if (row < 0 || row >= m.getNumRows()) {
@@ -133,6 +137,36 @@ public class Matrix {
       }
       
       return m.setRow(row, m.getRow(row).add(v));
+   }
+
+   /**
+    * cofactorMatrix accepts a row and a column, and returns the Matrix object
+    * with that row and column dropped.
+    * @param row an int
+    * @param col an int
+    * @return a copy of m, with the specified row and column dropped
+    */
+   public Matrix cofactorMatrix(int row, int col) {
+      return Matrix.cofactorMatrix(this, row, col);
+   }
+   
+   /**
+    * cofactorMatrix accepts a row and a column, and returns the Matrix object
+    * with that row and column dropped.
+    * @param m a Matrix object
+    * @param row an int
+    * @param col an int
+    * @return a copy of m, with the specified row and column dropped
+    */
+   public static Matrix cofactorMatrix(Matrix m, int row, int col) {
+      if (row < 0 || row >= m.getNumRows()) {
+         throw new IllegalArgumentException("row is not in the correct range");
+      }
+      if (col < 0 || col >= m.getNumColumns()) {
+         throw new IllegalArgumentException("col is not in the correct range");
+      }
+      
+      return m.dropRow(row).dropColumn(col);
    }
    
    /**
@@ -161,7 +195,7 @@ public class Matrix {
          for (int col = 0; col < m.getNumColumns(); col++) {
             determinant += Math.pow(-1, col) *  
                            m.getEntry(0, col) *
-                           Matrix.determinant(m.dropRow(0).dropColumn(col));
+                           Matrix.determinant(m.cofactorMatrix(0, col));
          }
       }
 
@@ -173,7 +207,8 @@ public class Matrix {
     * returns the matrix, with that column dropped.
     * It does this by passing all columns except the column to be dropped
     * to fromColumnVectors.
-    * @param col a column index (0 < col < matrix[0].length)
+    * @param col a column index {@literal (0 < col < matrix[0].length)}
+    * @return a Matrix with the specified column dropped
     */  
    public Matrix dropColumn(int col) {
       return Matrix.dropColumn(this, col);
@@ -185,7 +220,8 @@ public class Matrix {
     * It does this by passing all columns except the column to be dropped
     * to fromColumnVectors.
     * @param m a Matrix object
-    * @param col a column index (0 < col < matrix[0].length)
+    * @param col a column index {@literal (0 < col < matrix[0].length)}
+    * @return a Matrix with the specified column dropped
     */
    public static Matrix dropColumn(Matrix m, int col) {
       if (col < 0 || col >= m.getNumColumns()) {
@@ -216,7 +252,8 @@ public class Matrix {
     * returns the matrix, with that row dropped.
     * It does this by passing all rows except the row to be dropped
     * to fromRowVectors.
-    * @param row a row index (0 < row < matrix.length)
+    * @param row a row index {@literal (0 < row < matrix.length)}
+    * @return a Matrix with the specified row dropped
     */  
    public Matrix dropRow(int row) {
       return Matrix.dropRow(this, row);
@@ -227,7 +264,8 @@ public class Matrix {
     * to a row index, and returns the matrix, with that row dropped. It does 
     * this by passing all row except the row to be dropped to fromRowVectors.
     * @param m a Matrix object
-    * @param row a row index (0 < col < matrix.length)
+    * @param row a row {@literal index (0 < col < matrix.length)}
+    * @return a Matrix with the specified row dropped
     */
    public static Matrix dropRow(Matrix m, int row) {
       if (row < 0 || row >= m.getNumRows()) {
@@ -528,7 +566,7 @@ public class Matrix {
    /**
     * isSparse checks to see if most of the matrix entries are zero.
     * "most" is defined as no more the specified proportion
-    * @param p the desired proportion (0 < p <= 1)
+    * @param p the desired proportion {@literal (0 < p <= 1)}
     * @return true if the matrix contains very few nonzero entries,
     *         false otherwise
     */
@@ -540,7 +578,7 @@ public class Matrix {
     * isSparse checks to see if most of the matrix entries are zero.
     * "most" is defined as no more the specified proportion
     * @param m a Matrix object
-    * @param p the desired proportion (0 < p <= 1)
+    * @param p the desired proportion {@literal (0 < p <= 1)}
     * @return true if the matrix contains very few nonzero entries,
     *         false otherwise
     */
@@ -657,7 +695,8 @@ public class Matrix {
     *
     * The n-th entry in the returned vector is the dot product of the nth-row of m
     * with v.
-    *
+    * @param v a Vector object
+    * @return a Vector object containing the linear combination mv
     */
    public Vector multiply(Vector v) {
       return Matrix.multiply(this, v);
@@ -681,9 +720,9 @@ public class Matrix {
     * The n-th entry in the returned vector is the dot product of the nth-row of m
     * with v.
     *
-    * @param M the Matrix object
+    * @param m the Matrix object
     * @param v the Vector object
-    * @return a Vector object containing Mv
+    * @return a Vector object containing the linear combination mv
     */
    
    public static Vector multiply(Matrix m, Vector v) {
@@ -744,7 +783,6 @@ public class Matrix {
     * in the specified row with the entries in the Vector object
     * if the column length and the Vector length do not match, an
     * IllegalArgumentException will be thrown.
-    * @param m a Matrix object
     * @param col an index for the column
     * @param v a Vector object
     * @return a Matrix object with the col-th row replaced with v
@@ -842,7 +880,6 @@ public class Matrix {
     * in the specified row with the entries in the Vector object
     * if the row length and the Vector length do not match, an
     * IllegalArgumentException will be thrown.
-    * @param m a Matrix object
     * @param row an index for the row
     * @param v a Vector object
     * @return a Matrix object with the row-th row replaced with v
