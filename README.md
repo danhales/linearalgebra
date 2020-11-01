@@ -89,7 +89,7 @@ The `Matrix` class takes advantage of many of the properties of the `Vector` cla
 
 I'm using the terms "setters" and "getters" very loosely here in order to organize this `README`, because methods like `getColumn` do not return the value in a private field––they return a subset of entries in `entries` as a `Vector` object.
 
-* `cofactorMatrix(Matrix, int, int)` - returns a copy of the `Matrix` object with the indicated row and column dropped.
+* `minorMatrix(Matrix, int, int)` - returns a copy of the `Matrix` object with the indicated row and column dropped.
 
 * `fromColumnVectors(Vector...)` - accepts either an array of `Vector` objects, or a list of `Vector` objects as parameters, and returns a `Matrix` where those `Vector` objects make up the columns. `Vector` objects must all have the same length, or an `IllegalArgumentException` will be thrown. Implemented by returning the `transpose` of the value returned by `fromRowVectors`
 

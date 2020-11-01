@@ -140,25 +140,25 @@ public class Matrix {
    }
 
    /**
-    * cofactorMatrix accepts a row and a column, and returns the Matrix object
+    * minorMatrix accepts a row and a column, and returns the Matrix object
     * with that row and column dropped.
     * @param row an int
     * @param col an int
     * @return a copy of m, with the specified row and column dropped
     */
-   public Matrix cofactorMatrix(int row, int col) {
-      return Matrix.cofactorMatrix(this, row, col);
+   public Matrix minorMatrix(int row, int col) {
+      return Matrix.minorMatrix(this, row, col);
    }
    
    /**
-    * cofactorMatrix accepts a row and a column, and returns the Matrix object
+    * minorMatrix accepts a row and a column, and returns the Matrix object
     * with that row and column dropped.
     * @param m a Matrix object
     * @param row an int
     * @param col an int
     * @return a copy of m, with the specified row and column dropped
     */
-   public static Matrix cofactorMatrix(Matrix m, int row, int col) {
+   public static Matrix minorMatrix(Matrix m, int row, int col) {
       if (row < 0 || row >= m.getNumRows()) {
          throw new IllegalArgumentException("row is not in the correct range");
       }
@@ -195,7 +195,7 @@ public class Matrix {
          for (int col = 0; col < m.getNumColumns(); col++) {
             determinant += Math.pow(-1, col) *  
                            m.getEntry(0, col) *
-                           Matrix.determinant(m.cofactorMatrix(0, col));
+                           Matrix.determinant(m.minorMatrix(0, col));
          }
       }
 
