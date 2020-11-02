@@ -193,14 +193,23 @@ public class Matrix {
       }
       
       double determinant = 0;
-      
-      if (Matrix.getNumRows(m) == 1) {
-         determinant = Matrix.getEntry(m, 0, 0);
+            
+      if (m.isDiagonal() || m.isUpperTriangular() || m.isLowerTriangular()) {
+         determinant = 1.0;
+         
+         // determinant is the product of the entries on the diagonal
+         for (int i = 0; i < m.getNumRows(); i++) {
+            determinant *= m.getEntry(i,i);
+         }
       } else {
-         for (int col = 0; col < m.getNumColumns(); col++) {
-            determinant += Math.pow(-1, col) *  
-                           m.getEntry(0, col) *
-                           m.minorMatrix(0, col).determinant();
+         if (Matrix.getNumRows(m) == 1) {
+            determinant = Matrix.getEntry(m, 0, 0);
+         } else {
+            for (int col = 0; col < m.getNumColumns(); col++) {
+               determinant += Math.pow(-1, col) *  
+                              m.getEntry(0, col) *
+                              m.minorMatrix(0, col).determinant();
+            }
          }
       }
 
