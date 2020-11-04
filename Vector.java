@@ -1,4 +1,5 @@
 package linearalgebra;
+import linearalgebra.Matrix;
 
 /**
  * The Vector class provides basic vector operations for Euclidean vectors
@@ -412,16 +413,6 @@ public class Vector {
    }
 
    /**
-    * getLength method returns the number of entries in the 
-    * vector.
-    * @param u a Vector object
-    * @return the length of u
-    */
-   public static int length(Vector u) {
-      return u.entries.length;
-   }
-      
-   /**
     * Returns a copy of entries, not a reference to entries.
     * @return a copy of the array entries
     */
@@ -434,6 +425,31 @@ public class Vector {
       
       return entries;
    }
+
+
+   /**
+    * getLength method returns the number of entries in the 
+    * vector.
+    * @param u a Vector object
+    * @return the length of u
+    */
+   public static int length(Vector u) {
+      return u.entries.length;
+   }
+   
+   /**
+    * The outer product is matrix multiplication on u1 and
+    * the transpose of u2.
+    * @param u1 a Vector
+    * @param u2 a Vector
+    * @return the outer product
+    */
+   public static Matrix outerProduct(Vector u1, Vector u2) {
+      Matrix m1 = Matrix.fromColumnVectors(u1);
+      Matrix m2 = Matrix.fromRowVectors(u2);
+      return Matrix.multiply(m1, m2);
+   }
+      
    
    /**
     * Sets the values in the entries array.
