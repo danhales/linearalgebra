@@ -49,6 +49,28 @@ public class Vector {
    public Vector add(Vector u) {
       return Vector.add(this, u);
    }
+
+
+   /**
+    * add method accepts two vectors and returns their element-wise
+    * sum in a new Vector object. Assumes v1 and v2 have the same 
+    * length.
+    * @param u1 a Vector object
+    * @param u2 a Vector object
+    * @return a Vector objects whose entries are the sums of corresponding
+    *         entries in u1 and u2
+    */
+   public static Vector add(Vector u1, Vector u2) {
+      Vector.checkLengths(u1, u2);
+      
+      double[] sums = new double[u1.length()];
+      
+      for (int i = 0; i < sums.length; i++) {
+         sums[i] = u1.get(i) + u2.get(i);
+      }
+      
+      return new Vector(sums);
+   }
    
    /**
     * angleDegrees method computes the angle between the two vectors, 
@@ -122,18 +144,6 @@ public class Vector {
    }
    
    /**
-    * difference method returns the difference of two vectors. note
-    * that difference is a special case of sum (v1 + (-1)*v2)
-    * @param v1 a Vector object
-    * @param v2 a Vector object
-    * @return a new Vector object whose entries are the differences of
-    *         the entries in v1 and v2 (v1 - v2)
-    */
-   public static Vector subtract(Vector v1, Vector v2) {
-      return Vector.add(v1, v2.multiply(-1));
-   }
-   
-   /**
     * dot method computes the dot product of the calling vector and
     * the passed vectored.
     * assumes vectors have the same length.
@@ -162,6 +172,40 @@ public class Vector {
       
       return sum;
    }
+
+   /**
+    * Returns the entry in the specified position.
+    * @param position the position to return
+    * @return the value in entries[position]
+    */
+   public double get(int position) {
+      return Vector.get(this, position);
+   }
+   
+   /**
+    * Returns the entry in the specified position.
+    * @param u a Vector object
+    * @param position the position to return
+    * @return the value in u[position]
+    */
+   public static double get(Vector u, int position) {
+      return u.entries[position];
+   }
+
+   /**
+    * returns a copy of entries, not a reference to entries.
+    * @return a copy of the array entries
+    */
+   public double[] getEntries() {
+      double[] entries = new double[this.entries.length];
+      
+      for (int i = 0; i < this.entries.length; i++) {
+         entries[i] = this.entries[i];
+      }
+      
+      return entries;
+   }
+
    
    /**
     * identityVector returns an additive identity vector (whose entries are
@@ -174,10 +218,10 @@ public class Vector {
    }
    
    /**
-    * inverse returns the additive inverse of the calling vector.
+    * inverseVector returns the additive inverse of the calling vector.
     * @return a Vector with the signs flipped on all entries
     */
-   public Vector inverse() {
+   public Vector inverseVector() {
       return this.multiply(-1);
    }
    
@@ -212,6 +256,26 @@ public class Vector {
       
       return true;
    }
+
+   /**
+    * length method returns the number of entries in the 
+    * vector.
+    * @return the length of v
+    */
+   public int length() {
+      return Vector.length(this);
+   }
+
+   /**
+    * length method returns the number of entries in the 
+    * vector.
+    * @param u a Vector object
+    * @return the length of u
+    */
+   public static int length(Vector u) {
+      return u.entries.length;
+   }
+
    
    /**
     * Creates a linear combination (weighted sum) of the Vector objects
@@ -242,7 +306,7 @@ public class Vector {
     * @return the magnitude of the vector
     */
    public double magnitude() {
-      return magnitude(this);
+      return Vector.magnitude(this);
    }
    
    /**
@@ -266,6 +330,34 @@ public class Vector {
    }
    
    /**
+    * multiply accepts a Vector object and a scalar and returns
+    * a Vector whose entries are the entries of the Vector, multiplied
+    * by the scalar.
+    * @param u a Vector object
+    * @param scalar a real number
+    * @return the scalar product of the vector and the scalar
+    */
+   public static Vector multiply(Vector u, double scalar) {   
+      double[] products = new double[u.length()];
+      
+      for (int i = 0; i < products.length; i++) {
+         products[i] = scalar * u.get(i);
+      }
+      
+      return new Vector(products);
+   }
+
+   /**
+    * normalize scales the calling vector by dividing it by its 
+    * magnitude. if the zero vector is passed, an IllegalArgumentException 
+    * is thrown.
+    * @return a Vector object
+    */
+   public Vector normalize() {
+        return Vector.normalize(this);
+   }  
+   
+   /**
     * normalize scales the passed vector by dividing it by its 
     * magnitude. if the zero vector is passed, an IllegalArgumentException 
     * is thrown.
@@ -278,17 +370,50 @@ public class Vector {
       } else {
          return u.multiply(1.0/u.magnitude());
       }
+   } 
+   
+   /**
+    * scalarTripleProduct computes a.dot(b.cross(c))
+    * @param a a Vector object
+    * @param b a Vector object
+    * @param c a Vector object
+    * @return the scalar triple product a.dot(b.cross(c))
+    */
+   public static double scalarTripleProduct(Vector a, Vector b, Vector c) {
+      return Vector.dot(a, Vector.cross(b, c));
+   }
+      
+   /**
+    * The outer product is matrix multiplication on this and
+    * the transpose of u.
+    * @param u a Vector
+    * @return the outer product
+    */
+   public Matrix outerProduct(Vector u) {
+      return Vector.outerProduct(this, u);
    }
    
    /**
-    * normalize scales the calling vector by dividing it by its 
-    * magnitude. if the zero vector is passed, an IllegalArgumentException 
-    * is thrown.
-    * @return a Vector object
+    * The outer product is matrix multiplication on u1 and
+    * the transpose of u2.
+    * @param u1 a Vector
+    * @param u2 a Vector
+    * @return the outer product
     */
-   public Vector normalize() {
-        return Vector.normalize(this);
-   }   
+   public static Matrix outerProduct(Vector u1, Vector u2) {
+      Matrix m1 = Matrix.fromColumnVectors(u1);
+      Matrix m2 = Matrix.fromRowVectors(u2);
+      return Matrix.multiply(m1, m2);
+   }
+
+   /**
+    * an instance method that calls normL1 on the current object.
+    * @param p a real number greater than or equal to 1
+    * @return the L2 norm of the calling vector.
+    */
+   public double pnorm(double p) {
+      return Vector.pnorm(this, p);
+   }
 
    /**
     * pnorm accepts a Vector and a value for p and returns the Lp norm 
@@ -313,154 +438,28 @@ public class Vector {
    }
    
    /**
-    * an instance method that calls normL1 on the current object.
-    * @param p a real number greater than or equal to 1
-    * @return the L2 norm of the calling vector.
+    * projects the calling Vector onto the passed Vector
+    * @param u the Vector we want to project this one onto
+    * @return the orthogonal projection of this vector onto u
     */
-   public double pnorm(double p) {
-      return Vector.pnorm(this, p);
-   }
-
-   /**
-    * multiply accepts a Vector object and a scalar and returns
-    * a Vector whose entries are the entries of the Vector, multiplied
-    * by the scalar.
-    * @param u a Vector object
-    * @param scalar a real number
-    * @return the scalar product of the vector and the scalar
-    */
-   public static Vector multiply(Vector u, double scalar) {   
-      double[] products = new double[u.length()];
-      
-      for (int i = 0; i < products.length; i++) {
-         products[i] = scalar * u.get(i);
-      }
-      
-      return new Vector(products);
+   public Vector orthogonalProjection(Vector u) {
+      return Vector.orthogonalProjection(this, u);
    }
    
    /**
-    * scalarTripleProduct computes a.dot(b.cross(c))
-    * @param a a Vector object
-    * @param b a Vector object
-    * @param c a Vector object
-    * @return the scalar triple product a.dot(b.cross(c))
+    * projects u1 onto u2
+    * @param u1 the Vector whose orthogonal projection we want
+    * @param u2 the Vector we are projecting u1 onto
+    * @return the orthogonal projection
     */
-   public static double scalarTripleProduct(Vector a, Vector b, Vector c) {
-      return Vector.dot(a, Vector.cross(b, c));
-   }
-   
-   /**
-    * subtract method subtracts the passed Vector from the calling Vector.
-    * @param u a Vector object
-    * @return a Vector object whose entries are the difference of the
-    *         entries in the calling Vector and the respective entries 
-    *         in v
-    */
-   public Vector subtract(Vector u) {
-      return Vector.subtract(this, u);
-   }
-   
-   /**
-    * sum method accepts two vectors and returns their element-wise
-    * sum in a new Vector object. Assumes v1 and v2 have the same 
-    * length.
-    * @param u1 a Vector object
-    * @param u2 a Vector object
-    * @return a Vector objects whose entries are the sums of corresponding
-    *         entries in u1 and u2
-    */
-   public static Vector add(Vector u1, Vector u2) {
+   public static Vector orthogonalProjection(Vector u1, Vector u2) {
       Vector.checkLengths(u1, u2);
       
-      double[] sums = new double[u1.length()];
-      
-      for (int i = 0; i < sums.length; i++) {
-         sums[i] = u1.get(i) + u2.get(i);
+      if (u2.isZero()) {
+         throw new IllegalArgumentException("Cannot project onto zero vector");
       }
       
-      return new Vector(sums);
-   }
-   
-   // Setters, getters, and overridden methods.
-   
-   /**
-    * Returns the entry in the specified position.
-    * @param position the position to return
-    * @return the value in entries[position]
-    */
-   public double get(int position) {
-      return Vector.get(this, position);
-   }
-   
-   /**
-    * Returns the entry in the specified position.
-    * @param u a Vector object
-    * @param position the position to return
-    * @return the value in u[position]
-    */
-   public static double get(Vector u, int position) {
-      return u.entries[position];
-   }
-   
-   /**
-    * getLength method returns the number of entries in the 
-    * vector.
-    * @return the length of v
-    */
-   public int length() {
-      return Vector.length(this);
-   }
-
-   /**
-    * Returns a copy of entries, not a reference to entries.
-    * @return a copy of the array entries
-    */
-   public double[] getEntries() {
-      double[] entries = new double[this.entries.length];
-      
-      for (int i = 0; i < this.entries.length; i++) {
-         entries[i] = this.entries[i];
-      }
-      
-      return entries;
-   }
-
-
-   /**
-    * getLength method returns the number of entries in the 
-    * vector.
-    * @param u a Vector object
-    * @return the length of u
-    */
-   public static int length(Vector u) {
-      return u.entries.length;
-   }
-   
-   /**
-    * The outer product is matrix multiplication on u1 and
-    * the transpose of u2.
-    * @param u1 a Vector
-    * @param u2 a Vector
-    * @return the outer product
-    */
-   public static Matrix outerProduct(Vector u1, Vector u2) {
-      Matrix m1 = Matrix.fromColumnVectors(u1);
-      Matrix m2 = Matrix.fromRowVectors(u2);
-      return Matrix.multiply(m1, m2);
-   }
-      
-   
-   /**
-    * Sets the values in the entries array.
-    * @param entries an array of doubles
-    */
-   public void setEntries(double[] entries) {
-      this.entries = new double[entries.length];
-      
-      for (int i = 0; i < entries.length; i++) {
-         this.entries[i] = entries[i];
-      }
+      return Vector.multiply(u2, u1.dot(u2) / u2.dot(u2));
    }
    
    /**
@@ -489,7 +488,42 @@ public class Vector {
       entries[index] = value;
       
       return new Vector(entries);
-   }   
+   } 
+
+   /**
+    * Sets the values in the entries array.
+    * @param entries an array of doubles
+    */
+   public void setEntries(double[] entries) {
+      this.entries = new double[entries.length];
+      
+      for (int i = 0; i < entries.length; i++) {
+         this.entries[i] = entries[i];
+      }
+   }
+
+   /**
+    * subtract method subtracts the passed Vector from the calling Vector.
+    * @param u a Vector object
+    * @return a Vector object whose entries are the difference of the
+    *         entries in the calling Vector and the respective entries 
+    *         in v
+    */
+   public Vector subtract(Vector u) {
+      return Vector.subtract(this, u);
+   }
+
+   /**
+    * subtract method returns the difference of two vectors. note
+    * that difference is a special case of sum (v1 + (-1)*v2)
+    * @param v1 a Vector object
+    * @param v2 a Vector object
+    * @return a new Vector object whose entries are the differences of
+    *         the entries in v1 and v2 (v1 - v2)
+    */
+   public static Vector subtract(Vector v1, Vector v2) {
+      return Vector.add(v1, v2.multiply(-1));
+   }  
    
    /**
     * Return a String containing the vector represented as a row in brackets, e.g.
