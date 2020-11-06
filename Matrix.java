@@ -13,6 +13,11 @@ public class Matrix {
     */
    private double[][] entries;
    
+   /*
+    * threshold for double comparisons
+    */
+   public static final double THRESHOLD = Double.MIN_VALUE * 1000;
+   
    /**
     * accepts a 2D array of doubles and copies them into the entries field.
     * @param entries a 2D array of doubles
@@ -502,7 +507,7 @@ public class Matrix {
             if (row != col) { // if we're not on the diagonal
             
                // if the value is non-zero
-               if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
+               if (Math.abs(m.entries[row][col]) > Matrix.THRESHOLD) {
                   return false;
                }
             }
@@ -531,9 +536,43 @@ public class Matrix {
       
       for (int row = 1; row < m.entries.length; row++) {
          for (int col = 0; col < row; col++) { // only below the diagonal
-            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
+            if (Math.abs(m.entries[row][col]) > Matrix.THRESHOLD) {
                return false;
             }
+         }
+      }
+      
+      return true;
+   }
+
+   /**
+    * checks to see if there is exactly one 1 in each row and column,
+    * and only zeroes everywhere else. Matrix must be square.
+    * an n-by-n permutation Matrix rearranges the entries of an n-by-1
+    * Vector
+    * @return true if Matrix is a permutation Matrix, false otherwise
+    */
+   public boolean isPermutationMatrix() {
+      return Matrix.isPermutationMatrix(this);
+   }
+   
+   /**
+    * checks to see if there is exactly one 1 in each row and column,
+    * and only zeroes everywhere else. Matrix must be square.
+    * an n-by-n permutation Matrix rearranges the entries of an n-by-1
+    * Vector
+    * @param m a Matrix object
+    * @return true if Matrix is a permutation Matrix, false otherwise
+    */
+   public static boolean isPermutationMatrix(Matrix m) {
+      if (!Matrix.isSquare(m)) {
+         throw new IllegalArgumentException("Matrix is not square");
+      }
+      
+      for (int i = 0; i < m.getNumRows(); i++) {
+         if (!(m.getRow(i).isCanonicalBasisVector() 
+            && m.getColumn(i).isCanonicalBasisVector())) {
+            return false;
          }
       }
       
@@ -562,7 +601,7 @@ public class Matrix {
       
       for (int row = 0; row < m.entries.length; row++) {
          for (int col = 0; col < m.entries[row].length; col++) {
-            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
+            if (Math.abs(m.entries[row][col]) > Matrix.THRESHOLD) {
                numNonzero++;
             }
          }
@@ -591,7 +630,7 @@ public class Matrix {
     *         false otherwise
     */
    public static boolean isSparse(Matrix m, double p) {
-      if (p <= Double.MIN_VALUE || p > 1) {
+      if (p < Matrix.THRESHOLD || p > 1) {
          throw new IllegalArgumentException("p is not in the correct range (0,1]");
       }
    
@@ -599,7 +638,7 @@ public class Matrix {
       
       for (int row = 0; row < m.entries.length; row++) {
          for (int col = 0; col < m.entries[row].length; col++) {
-            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
+            if (Math.abs(m.entries[row][col]) > Matrix.THRESHOLD) {
                numNonzero++;
             }
          }
@@ -648,7 +687,7 @@ public class Matrix {
       
       for (int row = 0; row < m.entries.length; row++) {
          for (int col = row+1; col < m.entries[row].length; col++) { // only below the diagonal
-            if (Math.abs(m.entries[row][col]) >= 10 * Double.MIN_VALUE) {
+            if (Math.abs(m.entries[row][col]) > Matrix.THRESHOLD) {
                return false;
             }
          }
@@ -1058,8 +1097,7 @@ public class Matrix {
    
    /**
     * decomposes the Matrix object into column vectors
-    * @param m a Matrix object
-    * @param an array of Vector objects
+    * @return an array of Vector objects
     */
    public Vector[] toColumnVectors() {
       return Matrix.toColumnVectors(this);
@@ -1068,7 +1106,7 @@ public class Matrix {
    /**
     * decomposes the Matrix object into column vectors
     * @param m a Matrix object
-    * @param an array of Vector objects
+    * @return an array of Vector objects
     */
    public static Vector[] toColumnVectors(Matrix m) {
       return Matrix.toRowVectors(m.transpose());
