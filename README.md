@@ -37,13 +37,15 @@ Because linear algebra (as it applies to machine learning) largely revolves arou
 
 ### Unary Operations (operations on a single `Vector`)
 
-* `inverseVector(Vector)` / `inverse()` - returns the additive inverse of the vector, which is the same vector, with the signs flipped (e.g. {1, -2, 3} becomes {-1, 2, -3})
+* `inverseVector(Vector)` / `inverse()` - returns the additive inverse of the `Vector`, which is the same vector, with the signs flipped (e.g. {1, -2, 3} becomes {-1, 2, -3})
 
-* `isZero()` - checks to see if the `Vector` is essentially zero, which I've defined as smaller than Double.MIN_VALUE * 10.
+* `isCanonicalBasisVector(Vector)` - checks to see if `Vector` is all zeros, except for a single 1
 
-* `length()` - returns the number of entries in the `Vector`, which is the length of `v`
+* `isZero(Vector)` - checks to see if the `Vector` is essentially zero, which I've defined as smaller than Double.MIN_VALUE * 10.
 
-* `magnitude()` - returns the <a href="https://en.wikipedia.org/wiki/Euclidean_space#Euclidean_norm">Euclidean norm</a> of the `Vector`
+* `length(Vector)` - returns the number of entries in the `Vector`, which is the length of `v`
+
+* `magnitude(Vector)` - returns the <a href="https://en.wikipedia.org/wiki/Euclidean_space#Euclidean_norm">Euclidean norm</a> of the `Vector`
 
 * `normalize()` - scales a `Vector` `v` with the factor `(1/v.magnitude())`. Throws an `IllegalArgumentException` if `v.isZero()` returns `true`
 
@@ -105,7 +107,13 @@ I'm using the terms "setters" and "getters" very loosely here in order to organi
 
 * `identityMatrix(int)` returns an n-by-n Matrix (where `n` is specified as a parameter) which has ones on the diagonal, and zeros elsewhere.
 
+* `minorMatrix(Matrix, int, int)` - returns a copy of the matrix with the specified row (first int) and specified column (second int) dropped
+
 * `setColumn(Matrix, int, double[])` / `setColumn(int, Vector)` / `setRow(Matrix, int, double[])` / `setRow(Matrix, int, Vector)` - accepts an int for the index of the column/row we want to set and either an array of new entries or a `Vector` of new entries, and replaces the entries in that column/row with the new entries. If the length of the new entries is not equal to the length of the column/row being set, or if the column/row index specified is out of range, an `IllegalArgumentException` will be thrown.
+
+* `toColumnVectors(Matrix)` - returns the columns of the `Matrix` as an array of `Vector` objects
+
+* `toRowVectors(Matrix)` - returns the rows of the `Matrix` as an array of `Vector` objects
 
 * `toString()` - represents entries Python-style as a stack of row vectors, e.g.
 
@@ -116,11 +124,13 @@ I'm using the terms "setters" and "getters" very loosely here in order to organi
 
 ### Unary Operations (operations on a single `Matrix`)
 
-* `determinant(Matrix)` - recursively computes the determinant of a square matrix using the Laplace expansion
+* `determinant(Matrix)` - recursively computes the determinant of a square matrix using the Laplace expansion, O(n!). Not recommended for use.
 
 * `isDiagonal(Matrix)` - returns `true` if the `Matrix` is square and all nonzero entries (threshold-checked) are located on the diagonal
 
 * `isLowerTriangular(Matrix)` - returns `true` if all values below the diagonal are zero
+
+* `isPermutationMatrix(Matrix)` - returns `true` if the Matrix is all zeros, except for a single 1 in each row and each column
 
 * `isSparse(Matrix)` / `isSparse(Matrix, double)` - counts the number of (threshold-checked) zero entries. No-arg version returns `true` if there are no more nonzero entries than max{number of rows, number of columns}. Version that accepts a `double` allows user to specify the proportion explicitly. As of now, this is simply a check, and no optimizations for sparse matrices are carried out.
 
