@@ -1056,6 +1056,47 @@ public class Matrix {
                           .setRow(row2, m.getRow(row1));
    }
    
+   /**
+    * decomposes the Matrix object into column vectors
+    * @param m a Matrix object
+    * @param an array of Vector objects
+    */
+   public Vector[] toColumnVectors() {
+      return Matrix.toColumnVectors(this);
+   }
+   
+   /**
+    * decomposes the Matrix object into column vectors
+    * @param m a Matrix object
+    * @param an array of Vector objects
+    */
+   public static Vector[] toColumnVectors(Matrix m) {
+      return Matrix.toRowVectors(m.transpose());
+   }
+   
+   /**
+    * decomposes the Matrix object into row vectors
+    * @return an array of Vector objects
+    */
+   public Vector[] toRowVectors() {
+      return Matrix.toRowVectors(this);
+   }   
+   
+   /**
+    * decomposes the Matrix object into row vectors
+    * @param m a Matrix object
+    * @return an array of Vector objects
+    */
+   public static Vector[] toRowVectors(Matrix m) {
+      Vector[] v = new Vector[m.getNumRows()];
+      
+      for (int i = 0; i < m.getNumRows(); i++) {
+         v[i] = new Vector(m.getRow(i));
+      }
+      
+      return v;
+   }
+   
    
    /**
     * returns the sum of the entries on the diagonal of a square entries, which is
