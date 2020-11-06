@@ -17,6 +17,11 @@ public class Vector {
     */
    private double[] entries;
    
+   /*
+    * threshold for double comparisons
+    */
+   public static final double THRESHOLD = Double.MIN_VALUE * 1000;
+   
    /**
     * Constructor makes a copy of the array passed.
     * @param entries an array containing the entries in the vector
@@ -233,6 +238,36 @@ public class Vector {
    public static Vector inverseVector(Vector u) {
       return Vector.multiply(u, -1);
    }
+   
+   /**
+    * checks to see if the Vector object is a canonical basis Vector,
+    * i.e. it has a one in exactly one entry and zeroes everywhere
+    * else.
+    * @return true if Vector contains all zeroes and a single one
+    */
+   public boolean isCanonicalBasisVector() {
+      return Vector.isCanonicalBasisVector(this);
+   }
+   
+   /**
+    * checks to see if the Vector object is a canonical basis Vector,
+    * i.e. it has a one in exactly one entry and zeroes everywhere
+    * else.
+    * @param u a Vector object
+    * @return true if Vector contains all zeroes and a single one
+    */
+   public static boolean isCanonicalBasisVector(Vector u) {
+      int numOnes = 0;
+      int numZeros = 0;
+      
+      for (int i = 0; i < u.length(); i++) {
+         if (Math.abs(1 - u.get(i)) < Vector.THRESHOLD) {
+            numOnes++;
+         }
+      }
+      
+      return numOnes == 1;
+   }
 
    /**
     * isZero checks to see if all entries are zero.
@@ -249,7 +284,7 @@ public class Vector {
     */
    public static boolean isZero(Vector u) {
       for (double entry : u.entries) {
-         if (Math.abs(entry) > Double.MIN_VALUE * 10) { // if a non-zero entry is found
+         if (Math.abs(entry) > Vector.THRESHOLD) { // if a non-zero entry is found
             return false;
          }
       }
