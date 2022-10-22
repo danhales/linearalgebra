@@ -772,7 +772,7 @@ public class Matrix {
     */
    
    public static Vector multiply(Matrix m, Vector u) {
-      if (u.length() != m.getNumRows()) {
+      if (u.length() != m.getNumColumns()) {
          throw new IllegalArgumentException("Incompatible shapes.\n");
       }
    
